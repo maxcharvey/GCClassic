@@ -9,7 +9,7 @@
 	url = https://github.com/geoschem/geos-chem-shared-docs.git
 [submodule "Cloud-J"]
 	path = src/Cloud-J
-	url = https://github.com/geoschem/Cloud-J.git
+	url = git@github.com:maxcharvey/Cloud-J.git
 [submodule "src/HETerogeneous-vectorized-or-Parallel"]
 	path = src/HETP
 	url = https://github.com/geoschem/HETerogeneous-vectorized-or-Parallel

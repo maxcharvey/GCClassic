@@ -1,15 +1,15 @@
 [submodule "GEOS-Chem"]
 	path = src/GEOS-Chem
-	url = https://github.com/geoschem/geos-chem.git
+	url = https://github.com/maxcharvey/geos-chem.git
 [submodule "HEMCO"]
 	path = src/HEMCO
-	url = https://github.com/geoschem/hemco.git
+	url = https://github.com/maxcharvey/HEMCO.git
 [submodule "geos-chem-shared-docs"]
 	path = docs/source/geos-chem-shared-docs
 	url = https://github.com/geoschem/geos-chem-shared-docs.git
 [submodule "Cloud-J"]
 	path = src/Cloud-J
-	url = git@github.com:maxcharvey/Cloud-J.git
+	url = https://github.com/maxcharvey/Cloud-J.git
 [submodule "src/HETerogeneous-vectorized-or-Parallel"]
 	path = src/HETP
 	url = https://github.com/geoschem/HETerogeneous-vectorized-or-Parallel

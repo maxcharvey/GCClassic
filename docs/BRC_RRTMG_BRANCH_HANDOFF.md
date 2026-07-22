@@ -3,9 +3,9 @@
 ## Purpose
 
 This document records every material addition relative to the GEOS-Chem main
-branches for the BrC/RRTMG worktree as inspected on 21 July 2026. It is a
-source-diff handoff, not a scientific validation claim and not a simulation
-result.
+branches for the BrC/RRTMG worktree as inspected on 21 July 2026 and amended
+for the ordinary-map repair on 22 July. It is a source-diff handoff, not a
+scientific validation claim and not a simulation result.
 
 The name "brc_rrtmg" refers to the three modified submodule branches. The
 superproject is currently on debug/rrtmg-brc-aod-checks, which points to those
@@ -14,7 +14,7 @@ submodule commits.
 | Component | Comparison | Merge-base on main | Handoff head | Diff size |
 | --- | --- | --- | --- | --- |
 | Superproject | main...debug/rrtmg-brc-aod-checks | ed80134116a2 | this handoff commit | .gitmodules, 3 gitlinks, and handoff |
-| GEOS-Chem | main...max/brc_rrtmg | df4592e84561 | cd9c5c1b7 | 34 files, +6,105/-312 |
+| GEOS-Chem | main...max/brc_rrtmg | df4592e84561 | f280b2a50 | 34 files, +6,147/-317 |
 | HEMCO | main...max/brc_rrtmg | e23c43b89a | 2552b0a | 1 file, +125/-2 |
 | Cloud-J | main...max/brc_rrtmg | 1dff6fe8d6cf | f33a1b0 | 1 file, +6/-2 |
 | HETP | no branch change | n/a | 2a99b24625ed | none |
@@ -30,7 +30,7 @@ Everything in Sections 1 through 11 is committed on the heads listed above.
 This is the implementation that would be obtained by checking out the named
 branches and initializing submodules.
 
-### 21 July compatibility follow-on
+### 21--22 July compatibility follow-on
 
 The following changes are now committed and pinned by this superproject
 handoff:
@@ -44,6 +44,10 @@ handoff:
 The first three are correctness and compatibility fixes. The fourth is
 backward compatible: a normal 63-entry FJX table retains the wet-BrC mapping,
 while a matching 68-entry table enables dedicated dry-DBRC records.
+
+The 22 July GEOS-Chem follow-on safeguards the ordinary five-entry
+`brown_carbon:false` hygroscopic map while retaining the fixed eleven-bin
+optical layout. The superproject gitlink is advanced by `da74f7399`.
 
 The untracked file simple_xy.nc is unrelated to this implementation and is
 deliberately excluded from this document.
@@ -583,7 +587,7 @@ match this branch.
 | Path | Change |
 | --- | --- |
 | .gitmodules | switches GEOS-Chem, HEMCO, and Cloud-J URLs to the maxcharvey forks; Cloud-J URL changes from SSH to HTTPS |
-| src/GEOS-Chem | gitlink advanced to cd9c5c1b7 |
+| src/GEOS-Chem | gitlink advanced to f280b2a50 (from cd9c5c1b7 in the 21 July handoff) |
 | src/HEMCO | gitlink advanced to 2552b0a |
 | src/Cloud-J | gitlink advanced to f33a1b0 |
 
@@ -666,6 +670,7 @@ The committed GEOS-Chem branch history is:
 | 78f650be1 | 2026-07-10 | complete BrC RRTMG integration |
 | 24fecc76e | 2026-07-15 | production upper whitening-lifetime bound |
 | cd9c5c1b7 | 2026-07-21 | brown_carbon compatibility gate, Cloud-J slots, static test |
+| f280b2a50 | 2026-07-22 | safeguard ordinary brown_carbon:false map |
 
 HEMCO commits are 62dd0e8 (initial OC/FSOAP partition), 5d481e9 (DBRCPOA
 scaled from BC), 3bdab08 (persistent primary-BrC split), and 2552b0a
@@ -712,6 +717,15 @@ Fast-JX change; Fast-JX remains a 63-entry implementation.
 The matching Cloud-J capacity and GEOS-Chem map are committed together. A
 68-entry external table is still required before dedicated dry-DBRC records
 can be exercised.
+
+### 22 July ordinary brown_carbon:false map repair
+
+GEOS-Chem `f280b2a50` initializes the fixed eleven-bin `Map_NRHAER` map
+canonically, then remaps only active state entries. State-backed AOD, area,
+and debug loops now use `State_Chm%nHygGrth`, so an ordinary five-entry state
+does not dereference inactive slots. The code rejects a state map larger than
+the fixed layout and rejects an enabled BrC state that lacks all eleven
+entries. The static wiring test asserts these contracts.
 
 ## 12. Handoff requirements and cautions
 

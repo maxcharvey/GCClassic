@@ -34,9 +34,16 @@ jobs:
           sudo apt update -y
           sudo apt install -y libnetcdf-dev netcdf-bin libnetcdff-dev
 
-      - name: Compile-only tests
+      - name: BrC implementation checks
         run: |
           git submodule update --init --recursive
+          cd src/GEOS-Chem
+          bash test/implementation/run_brc_aerosol_map_test.sh
+          bash test/implementation/run_brc_cloudj_map_test.sh
+          bash test/implementation/brc_wiring_test.sh
+
+      - name: Compile-only tests
+        run: |
           cd test/integration/GCClassic
           ./integrationTest.sh -d $HOME/compile-tests -t compile
           cat $HOME/compile-tests/logs/results.compile.log

@@ -4,7 +4,9 @@ Audit date: 2026-09-21. Branch: `integration/brc-14.8.0` in GCClassic,
 GEOS-Chem, HEMCO and Cloud-J. Scope: all open issues in the four
 `maxcharvey` development forks, including their comments and linked context.
 The initial audit covered 28: GCClassic 6, GEOS-Chem 20, Cloud-J 2, HEMCO 0.
-Eleven were closed after the first published validation phase. The later
+Eleven were closed after the first published validation phase. Three more
+were closed after the follow-up: core #17 and #20, and wrapper #7. Fourteen
+remain open (core 10, wrapper 3, Cloud-J 1, HEMCO 0). The later
 [engineering follow-up](BRC_148_ENGINEERING_FOLLOWUP.md) records additional
 acceptance evidence separately, without relabeling earlier run snapshots.
 

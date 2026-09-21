@@ -139,11 +139,23 @@ extension is resolved by name, set to 30% FT over 15 levels, and cannot also
 emit from the direct surface block. The 14.8 case uses native variable-height
 GFAS. Both keep the existing optics and use Cloud-J/RRTMG and scheme 4.
 
-The isolated 14.7 reference is frozen at wrapper `c2bbfe2` (manifest-only child
-of `25a81c2`), core `c72cbb3`, HEMCO `17d31b9`, Cloud-J `f33a1b0`, HETP
-`2a99b24`, and KPP `eeee895`. It is a local independent source copy, not a
-mutable donor symlink; the original 14.7 worktree is untouched. Configure
-passes; build and one-hour qualification are separate readiness gates.
+The isolated 14.7 reference was first frozen at wrapper `c2bbfe2`
+(manifest-only child of `25a81c2`) and core `c72cbb3`. Its build-optimized local
+derivative is wrapper `390be1fb7c952924d9b3d536d650a1a34ae0d41d`, core
+`64209100986ad45144b3966cbb7899a5e05d431a`; HEMCO `17d31b9`, Cloud-J
+`f33a1b0`, HETP `2a99b24`, and KPP `eeee895` are unchanged. Only
+`GeosRad/CMakeLists.txt` differs from the base core: the exact 14.8 GNU
+Release/RelWithDebInfo per-source `-O1 -fno-unroll-loops` workaround for the
+two large RRTMG coefficient initializer files, plus Release-only `-g0` for
+those same files to suppress pathological debug-information generation.
+The extra `-g0` does not apply to Debug or RelWithDebInfo. No Fortran,
+coefficient values or science parameters changed; bitwise equivalence to the
+previous build is not claimed. The original O3 and intermediate O1-with-debug
+build attempts were interrupted and their logs preserved. This is a local
+independent source copy, not a mutable donor
+symlink; the original 14.7 worktree is untouched. The final configure and
+Cloud-J/RRTMG Release build pass. One-hour runtime qualification remains
+pending the restart-initialization choice and independent run-steward gate.
 
 Broad HISTORY output is monthly (`00000100 000000`), with daily RRTMG and
 BrCDiagnostics (`00000001 000000`); `00010000` would incorrectly mean a year.
@@ -174,3 +186,20 @@ does not assign chemical units to met/AOD outputs. Nine synthetic tests pass;
 a self-pair of 149 existing August-1 legacy samples also passes with zero
 differences. That self-test is explicitly NOT a 14.7/14.8 result. See the
 [August analysis contract](BRC_AUG2018_COMPARISON.md) for the eventual command.
+
+## Publication and issue state
+
+Code-tested/published wrapper `49f77cbaeafa5cc6b98d21fdafcbfef845cda8c1`
+pins core `1f49bbaddffd43dbfec7a4ec1087b13a2c6ced33`; HEMCO `c06052a`,
+Cloud-J `f78dca8`, and HETP `df2f942` are unchanged. All seven GCC 10–16
+[CI jobs passed](https://github.com/maxcharvey/GCClassic/actions/runs/35659916703).
+A completed fresh recursive clone passes the clean/exact/remote-tip contract
+and all 86 wrapper tests. The original shared-filesystem checkout twice hit
+the checker's 30-second recursive-status timeout; these failed checks are
+retained and are not represented as successful local checks. An initial
+incomplete fresh-clone attempt is also retained separately from the completed
+clone's PASS.
+
+Core #17/#20 and GCClassic #7 are closed with linked evidence. Fourteen issues
+remain open; FAST-JX #25 has a published partial-progress/blocker comment.
+No new physical optics, chemistry pathways or parameter promotions are claimed.

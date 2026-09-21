@@ -34,6 +34,23 @@ class FireOutputTests(unittest.TestCase):
     def test_gfas_closures(self):
         self.assertEqual(audit(self.make_file())['status'], 'PASS')
 
+    def test_gfed_surface_only_closures(self):
+        path = self.make_file()
+        with h5py.File(path, "a") as f:
+            for name in list(f):
+                if name.endswith("_Fire"):
+                    f[name][1:] = 0
+                    f[name.replace("_Fire", "_FireColumn")][...] = f[name][...].sum(axis=0)
+        self.assertEqual(audit(path, "gfed")["status"], "PASS")
+        self.assertEqual(audit(path, "gfas")["status"], "FAIL")
+
+    def test_empty_gfed_fails(self):
+        path = self.make_file()
+        with h5py.File(path, "a") as f:
+            for field in f.values():
+                field[...] = 0
+        self.assertEqual(audit(path, "gfed")["status"], "FAIL")
+
     def test_bad_fsoap_fails(self):
         self.assertEqual(audit(self.make_file(True))['status'], 'FAIL')
 

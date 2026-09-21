@@ -20,7 +20,9 @@ tests. The optical-routing/PDER worktree remains an experiment, not an
 implicit production donor. Original dirty files and existing outputs are
 not modified. Submodule URLs point at the development forks; new commits
 must be pushed to those forks before this wrapper can be cloned elsewhere.
-No push is part of this local integration.
+The subsequent issue-audit/publication pass is explicitly user-authorized.
+See the [open-issue ledger](BRC_14.8_ISSUE_AUDIT.md) for its scope and the
+[provenance checks](BRC_FORCING_PROVENANCE.md) before building or analysis.
 
 ## Design and file-cascade checklist
 
@@ -135,9 +137,9 @@ HISTORY. For an RRTMG-off build, disable the runtime RRTMG activation,
 the HEMCO RRTMG input switch and its HISTORY collection. Leave the
 configured AOD wavelengths; separate BrC online-AOD diagnostics remain usable.
 
-To publish later, push GEOS-Chem, HEMCO and Cloud-J integration branches
+To publish, push GEOS-Chem, HEMCO and Cloud-J integration branches
 to their development forks first, then the GCClassic wrapper branch.
-All are local until explicitly pushed.
+Verify remote tips and a fresh recursive clone after publication.
 
 ## Validation record
 

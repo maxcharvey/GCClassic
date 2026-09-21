@@ -57,7 +57,7 @@ def audit(path, inventory="gfas"):
     metrics = {}
     with h5py.File(path, "r") as nc:
         fields = {name.rsplit("/", 1)[-1]: ds for name, ds in _datasets(nc)}
-        if inventory != "gfas":
+        if inventory not in ("gfas", "gfed"):
             return {"status": "FAIL", "errors": [f"unsupported inventory: {inventory}"]}
         missing = [name for name in REQUIRED if name not in fields]
         if missing:
@@ -83,7 +83,9 @@ def audit(path, inventory="gfas"):
                 errors.append(f"{name} contains NaN/Inf")
             if np.any(arr < 0):
                 errors.append(f"{name} contains negative values")
-            if arr.ndim >= 3 and not np.any(arr[1:] > 0):
+            if not np.any(arr > 0):
+                errors.append(f"{name} has no positive fire emissions")
+            if inventory == "gfas" and arr.ndim >= 3 and not np.any(arr[1:] > 0):
                 errors.append(f"{name} has no above-level-1 injection")
         for name, arr in columns.items():
             if not np.all(np.isfinite(arr)):
@@ -124,7 +126,7 @@ def audit(path, inventory="gfas"):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("file", type=Path)
-    parser.add_argument("--inventory", choices=("gfas",), default="gfas")
+    parser.add_argument("--inventory", choices=("gfas", "gfed"), default="gfas")
     args = parser.parse_args()
     report = audit(args.file, args.inventory)
     print(json.dumps(report, indent=2, allow_nan=False))

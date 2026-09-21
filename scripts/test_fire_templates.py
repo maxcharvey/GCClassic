@@ -34,6 +34,20 @@ def selected_block(text, inventory, options):
 
 
 class FireTemplateTests(unittest.TestCase):
+    def test_paired_brc_total_diagnostics(self):
+        for kind in ("fullchem", "aerosol"):
+            text = (ROOT / f"HEMCO_Diagn.rc.templates/HEMCO_Diagn.rc.{kind}").read_text()
+            rows = {row.split()[0]: row.split() for row in text.splitlines()
+                    if row.strip() and not row.lstrip().startswith("#")}
+            for species in BRC:
+                with self.subTest(kind=kind, species=species):
+                    profile = rows[f"Emis{species}_Total"]
+                    column = rows[f"Emis{species}_TotalColumn"]
+                    self.assertEqual(profile[1:5], [species, "-1", "-1", "-1"])
+                    self.assertEqual(column[1:5], profile[1:5])
+                    self.assertEqual(profile[5:7], ["3", "kg/m2/s"])
+                    self.assertEqual(column[5:7], ["2", "kg/m2/s"])
+
     def test_modes(self):
         for kind in ("fullchem", "aerosol"):
             text = (ROOT / f"HEMCO_Config.rc.templates/HEMCO_Config.rc.{kind}").read_text()

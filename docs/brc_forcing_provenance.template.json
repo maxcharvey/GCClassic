@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "run_id": null,
+  "purpose": "engineering",
+  "definition": {
+    "metric": null,
+    "boundary": null,
+    "sky": null,
+    "baseline": null,
+    "species_scope": null,
+    "inventory": null,
+    "optics_scheme": null
+  },
+  "sources": {
+    "GCClassic": {"commit": null, "ref": "integration/brc-14.8.0", "dirty": false},
+    "geos-chem": {"commit": null, "ref": "integration/brc-14.8.0", "dirty": false},
+    "HEMCO": {"commit": null, "ref": "integration/brc-14.8.0", "dirty": false},
+    "Cloud-J": {"commit": null, "ref": "integration/brc-14.8.0", "dirty": false},
+    "HETP": {"commit": null, "ref": null, "dirty": false}
+  },
+  "radiation": {
+    "code": "RRTMG",
+    "flux_convention": null,
+    "temporal_sampling": null,
+    "diagnostic_fields": []
+  },
+  "absorption": {"method": "unavailable"},
+  "artifacts": [
+    {"role": "geoschem_config", "path": "geoschem_config.yml", "sha256": null},
+    {"role": "hemco_config", "path": "HEMCO_Config.rc", "sha256": null},
+    {"role": "history", "path": "HISTORY.rc", "sha256": null},
+    {"role": "executable", "path": "gcclassic", "sha256": null},
+    {"role": "restart", "path": null, "sha256": null},
+    {"role": "online_optics", "path": null, "sha256": null},
+    {"role": "photolysis_optics", "path": null, "sha256": null}
+  ],
+  "qualification": {
+    "status": "engineering_only",
+    "optics": "placeholder",
+    "limitations": "Engineering only: organic-equivalent BrC optics; inherited emission and bleaching sensitivities are not production defaults."
+  }
+}

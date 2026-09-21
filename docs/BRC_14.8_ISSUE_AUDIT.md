@@ -135,3 +135,42 @@ the helper also rejects negative/nonfinite source flux. The cost is one
 3-D grid buffer per GFED instance, now allocated in surface mode as well.
 No generic HEMCO diagnostics or native GFAS implementation was changed.
 The failed fixture is retained and a separately named retry verifies closure.
+
+Final retry: `BRC_BASE_GFED_ONLINE_ISSUES_RETRY_20260921`, 2019-07-01
+00:00–01:00 UTC, global 4x5/47-level fullchem, organic-equivalent optics.
+Runtime wrapper `4cd98fbdc248b379b1130a6f83a66173f3a4fd23`, core
+`d45ab34f08cea5c80938ec8d0abda7dcc0a09496`, HEMCO
+`c06052a2c8d91593ffdf2a383bb47b42bb0ba43f`, Cloud-J
+`f78dca88e8767f9885e98a2889e89233ddeedf54`.
+Executable SHA-256:
+`aaba4936a6c12710f6400f6961dd3491173e6263e1f5cc66cefa3c92713cc962`.
+
+- Model exit 0 and normal end; BrC smoke audit PASS.
+- All nine GFED inventory profile/column pairs agree exactly; all four
+  all-source BrC profile/column pairs also agree exactly. Proxy-ratio
+  maximum relative error is 2.061e-7 (gate 2e-6).
+- FFOCPI, FFOCPO and their conversion diagnostic are finite/nonzero.
+  Dust AOD/SSA at all three wavelengths and the BASE/PM/DU/BRC/BRCT
+  radiation diagnostics are finite, with distinct mask results.
+- Aerosols (53 datasets), BrCDiagnostics (24), SpeciesConc (17), RRTMG
+  (55), StateMet (19), and final restart (417) are exactly array-equal to
+  the first fixture: 585 datasets. The fix changes the faulty fire-profile
+  output, not the tested concentrations or radiation.
+- 50 wrapper tests PASS; six core implementation checks PASS; updated
+  HEMCO CTest 2/2 PASS including real zero-control application with a null
+  extension state. Final RRTMG-on/off Release builds PASS. The final
+  inventory-label-only auditor correction also passes its eight tests.
+- Source/config/optical-table provenance checks PASS before and after
+  the run. Allocation 14797431 was released, COMPLETED 0:0 (34m33s).
+
+Full local evidence, including the failed fixture, retry, issue snapshot,
+build logs, JSON audits and `MANIFEST.md`, is under
+`runs/validation/BRC_1480_ISSUE_AUDIT_20260921` in the BrC project run root.
+The native GFAS source is unchanged by the GFED repair; its earlier
+variable-height runtime evidence is retained, and the current auditor also
+passes against that existing GFAS output (not a new GFAS model rerun).
+
+Publication procedure: push the three modified submodules first, then the
+wrapper. Verify remote tips with `check_brc_submodule_contract.py --remote`
+and repeat the check in a fresh recursive clone. The final documentation
+commit may follow the runtime wrapper pin above; do not relabel that run.

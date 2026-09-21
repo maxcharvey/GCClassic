@@ -42,6 +42,7 @@ class FireOutputTests(unittest.TestCase):
                     f[name][1:] = 0
                     f[name.replace("_Fire", "_FireColumn")][...] = f[name][...].sum(axis=0)
         self.assertEqual(audit(path, "gfed")["status"], "PASS")
+        self.assertTrue(audit(path, "gfed")["scope"].startswith("GFED "))
         self.assertEqual(audit(path, "gfas")["status"], "FAIL")
 
     def test_empty_gfed_fails(self):

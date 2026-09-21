@@ -36,7 +36,7 @@ def _field(ds):
 
 
 def _column(ds):
-    """Canonicalize GFAS columns: (lat,lon) or time=1 thereof."""
+    """Canonicalize fire columns: (lat,lon) or time=1 thereof."""
     arr = np.asarray(ds[...], dtype=float)
     if arr.ndim == 3:
         if arr.shape[0] != 1:
@@ -120,7 +120,7 @@ def audit(path, inventory="gfas"):
     return {"file": str(Path(path).resolve()), "inventory": inventory,
             "status": "FAIL" if errors else "PASS", "metrics": metrics,
             "errors": errors,
-            "scope": "GFAS diagnostic accumulation/profile closure only; not independent global emissions-mass validation"}
+            "scope": f"{inventory.upper()} diagnostic accumulation/profile closure only; not independent global emissions-mass validation"}
 
 
 if __name__ == "__main__":

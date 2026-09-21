@@ -39,6 +39,13 @@ File cascade, before implementation:
   inherits its maintained symlink); exercise GFED paired columns in the new
   smoke run and generalize the fire-output auditor's inventory dispatch.
   This adds output only, not an emission split or injection change.
+- Runtime-discovered follow-up: surface GFED supplies a 2-D emission array,
+  which HEMCO does not promote into requested 3-D inventory diagnostics.
+  Repair only `HEMCO/src/Extensions/hcox_gfed_mod.F90`: allocate its existing
+  3-D buffer in both modes, apply the already tested zero-control surface
+  profile, and always deliver the 3-D array. Extend the helper and wiring
+  tests, preserve the failed diagnostic fixture and run a new retry. Science
+  review: CONSISTENT; no physical mass/split/injection-parameter change.
 
 Acceptance: independent Fortran cascade review before compute-node builds;
 new and existing regression tests; incremental RRTMG-on/off compilation;
@@ -104,9 +111,27 @@ including elevated emissions and paired profile/column closure.
 ## Follow-up verification record
 
 Core correction snapshot: `d45ab34f08cea5c80938ec8d0abda7dcc0a09496`.
-HEMCO: `8195cd9a01cda6f93540329b2f4c19dc3ffc2554`.
+Initial HEMCO: `8195cd9a01cda6f93540329b2f4c19dc3ffc2554`.
 Cloud-J: `f78dca88e8767f9885e98a2889e89233ddeedf54`.
 
 Independent Fortran cascade review: PASS. The new helper's nine cases and
 static wiring checks pass. Full regression/build/runtime and publication
 results are appended after verification, not assumed from this source review.
+
+The first follow-up model run exited 0 and its BrC audit passed. FFOC
+concentrations/conversion and dust masks were finite/nonzero, and the four
+all-source BrC profile/column pairs closed exactly. All 53 Aerosols and 24
+BrCDiagnostics datasets were exactly equal to the earlier GFED/RRTMG run.
+However, eight of nine GFED inventory-specific profile/column pairs failed:
+surface GFED passed `Array2D`, while HEMCO only fills 3-D diagnostics when
+given `Array3D`. Its counter advanced despite the unfilled array, allowing
+stale storage to be written (in this fixture, every profile resembled FSOAP).
+These failed fire profiles must not be used for emissions analysis.
+
+The bounded HEMCO repair always delivers a 3-D GFED profile. The zero/zero
+control copies the original surface flux into layer 1 and zeros other
+levels without reading PBL fields. Positive-injection behavior is unchanged;
+the helper also rejects negative/nonfinite source flux. The cost is one
+3-D grid buffer per GFED instance, now allocated in surface mode as well.
+No generic HEMCO diagnostics or native GFAS implementation was changed.
+The failed fixture is retained and a separately named retry verifies closure.

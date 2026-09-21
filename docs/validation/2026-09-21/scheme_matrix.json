@@ -1,0 +1,97 @@
+{
+  "status": "PASS",
+  "errors": [],
+  "cases": {
+    "0": {
+      "BrCTauBleach": {
+        "min": 100000000.0,
+        "max": 100000000.0
+      },
+      "BrCKBleach": {
+        "min": 0.0,
+        "max": 0.0
+      },
+      "BrCFluxBRC2WTC": {
+        "min": 0.0,
+        "max": 0.0
+      },
+      "BrCFluxNPBRC2WTC": {
+        "min": 0.0,
+        "max": 0.0
+      }
+    },
+    "1": {
+      "BrCTauBleach": {
+        "min": 86400.0,
+        "max": 86400.0
+      },
+      "BrCKBleach": {
+        "min": 1.1574074051168282e-05,
+        "max": 1.1574074051168282e-05
+      },
+      "BrCFluxBRC2WTC": {
+        "min": 0.0,
+        "max": 11.316117286682129
+      },
+      "BrCFluxNPBRC2WTC": {
+        "min": 0.0,
+        "max": 2721.28662109375
+      }
+    },
+    "2": {
+      "BrCTauBleach": {
+        "min": 86400.0,
+        "max": 100000000.0
+      },
+      "BrCKBleach": {
+        "min": 9.99999993922529e-09,
+        "max": 1.1574074051168282e-05
+      },
+      "BrCFluxBRC2WTC": {
+        "min": 0.0,
+        "max": 11.316117286682129
+      },
+      "BrCFluxNPBRC2WTC": {
+        "min": 0.0,
+        "max": 2721.41259765625
+      }
+    },
+    "3": {
+      "BrCTauBleach": {
+        "min": 21600.0,
+        "max": 100000000.0
+      },
+      "BrCKBleach": {
+        "min": 9.99999993922529e-09,
+        "max": 4.6296296204673126e-05
+      },
+      "BrCFluxBRC2WTC": {
+        "min": 0.0,
+        "max": 21.16974449157715
+      },
+      "BrCFluxNPBRC2WTC": {
+        "min": 0.0,
+        "max": 8923.0419921875
+      }
+    },
+    "4": {
+      "BrCTauBleach": {
+        "min": 21600.0,
+        "max": 100000000.0
+      },
+      "BrCKBleach": {
+        "min": 9.99999993922529e-09,
+        "max": 4.6296296204673126e-05
+      },
+      "BrCFluxBRC2WTC": {
+        "min": 0.0,
+        "max": 20.97576141357422
+      },
+      "BrCFluxNPBRC2WTC": {
+        "min": 0.0,
+        "max": 8870.3271484375
+      }
+    }
+  },
+  "scope": "Runtime selection and expected existing rate behavior only; no parameter promotion. Scheme 2 retains the existing finite 1e8 s cap above 1 km, not exact zero."
+}

@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "errors": [],
+  "on_audit": {
+    "file": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/runs/validation/BRC_1480_QFED2_ENGINEERING_20260921/BRC_BASE_QFED2_ONLINE_HSON_20260921/OutputDir/HEMCO_diagnostics.201907010000.nc",
+    "inventory": "qfed2",
+    "status": "PASS",
+    "metrics": {
+      "EmisCO_Fire_above_level_1_fraction": 0.9173887311189293,
+      "EmisBCPI_Fire_above_level_1_fraction": 0.9216520195389872,
+      "EmisBCPO_Fire_above_level_1_fraction": 0.9216520195389872,
+      "EmisOCPI_Fire_above_level_1_fraction": 0.9270274071960508,
+      "EmisOCPO_Fire_above_level_1_fraction": 0.9270274071960508,
+      "EmisFSOAP_Fire_above_level_1_fraction": 0.9173887317689816,
+      "EmisNPBRCPOA_Fire_above_level_1_fraction": 0.9270274089363812,
+      "EmisPBRCPOA_Fire_above_level_1_fraction": 0.9270274071960508,
+      "EmisDBRCPOA_Fire_above_level_1_fraction": 0.9216520226159532,
+      "EmisCO_FireColumn_profile_sum_max_relative_error": 1.610527370826176e-07,
+      "EmisBCPI_FireColumn_profile_sum_max_relative_error": 1.7339403224210624e-07,
+      "EmisBCPO_FireColumn_profile_sum_max_relative_error": 1.7339403224210624e-07,
+      "EmisOCPI_FireColumn_profile_sum_max_relative_error": 1.692144724545938e-07,
+      "EmisOCPO_FireColumn_profile_sum_max_relative_error": 1.692144724545938e-07,
+      "EmisFSOAP_FireColumn_profile_sum_max_relative_error": 1.7184445896353408e-07,
+      "EmisNPBRCPOA_FireColumn_profile_sum_max_relative_error": 1.8095059894368466e-07,
+      "EmisPBRCPOA_FireColumn_profile_sum_max_relative_error": 1.692144724545938e-07,
+      "EmisDBRCPOA_FireColumn_profile_sum_max_relative_error": 1.7420791910319502e-07,
+      "max_fsoap_co_relative_error": 2.5878283314522713e-07,
+      "NPBRC=3*PBRC_max_relative_error": 2.565720283635246e-07,
+      "DBRC=4*(BCPI+BCPO)_max_relative_error": 2.824198399424069e-07,
+      "OC_total_4PBRC_max_relative_error": 5.605193857299268e-20
+    },
+    "errors": [],
+    "scope": "QFED2 diagnostic accumulation/profile closure only; not independent global emissions-mass validation"
+  },
+  "pair_metrics": {
+    "CO_unchanged_relative_error": 0.0,
+    "BCPI_unchanged_relative_error": 0.0,
+    "BCPO_unchanged_relative_error": 0.0,
+    "OC_partition_relative_error": 9.621451063632172e-08
+  },
+  "scope": "QFED engineering proxy partition and unchanged CO/BC only; no inventory attribution or optics qualification"
+}

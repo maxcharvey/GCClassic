@@ -78,6 +78,10 @@ def audit(root):
             errors.append(f'Scheme {scheme}: no normal end')
         if not re.search(rf'BrC bleaching scheme\s*:\s*{scheme}\b', log):
             errors.append(f'Scheme {scheme}: selection not printed')
+        drylog = (run / 'dryrun.log').read_text(errors='replace')
+        if ('GEOS-CHEM IS IN DRY-RUN MODE!' not in drylog or
+                not re.search(rf'BrC bleaching scheme\s*:\s*{scheme}\b', drylog)):
+            errors.append(f'Scheme {scheme}: acknowledged dry-run did not print selection')
         paths = sorted((run / 'OutputDir').glob('GEOSChem.BrCDiagnostics.*.nc4'))
         if len(paths) != 1:
             errors.append(f'Scheme {scheme}: expected one six-hour snapshot, got {len(paths)}')

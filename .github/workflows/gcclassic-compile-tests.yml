@@ -62,6 +62,8 @@ jobs:
           bash test/implementation/run_brc_species_test.sh
           bash test/implementation/brc_wiring_test.sh
           bash test/implementation/brc_finnv25_config_test.sh
+          bash test/implementation/qfed_brc_wiring_test.sh
+          python3 test/implementation/brc_bioburn_diagn_test.py
 
       - name: Fire emission and injection numerical tests
         run: |

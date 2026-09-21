@@ -28,8 +28,9 @@ current fullchem requires entries through 177. Its spectral input format is
 not interchangeable with Cloud-J v8. Do not remove the guard, copy the newer
 data blindly, or claim issue #25 closed from this source fix. Cloud-J remains
 the August comparison backend; an experimental FAST-JX data adaptation needs
-separate approval and full mapping validation. Cloud-J/RRTMG compilation is
-in progress, not yet runtime qualification of these new commits.
+separate approval and full mapping validation. The Cloud-J/RRTMG Release build
+has passed. The fresh binary also passes the paired QFED2 runtime test below;
+this does not qualify the disabled FAST-JX backend.
 
 ## Acceptance workflows
 
@@ -59,8 +60,56 @@ The corrected midnight positive-injection case completed successfully:
 All nine fire profile/column pairs and BrC proxy ratios pass the 2e-6 relative
 gate; PBRCPOA's column error is 2.24e-7. Its above-level-1 fraction is 0.8923
 (this is NOT an above-PBL fraction). Independent review accepts the result
-for core issue #20's diagnostic closure, not physical/global mass validation.
-Schemes 0–4 and the 24-hour case require separate completed-output audits.
+for inventory profile/column closure, not physical/global mass validation.
+The standard BioBurn names were still missing from the shipped templates;
+these have now been added for all four proxies, with inventory-selector
+instructions and an exact-pair static regression. A separate fresh one-hour
+GFED case using binary `30377e1d` completed normally; all eight standard aliases
+are finite, positive and exactly equal to the existing fire profile/column
+fields. Maximum profile-sum error is 2.57e-7, including positive elevated PBRC.
+The [alias audit](validation/2026-09-21/bioburn_aliases.json) and independent
+output review pass, satisfying issue #20's Classic/fullchem acceptance.
+
+All five six-hour scheme cases completed normally with identical executable,
+restart and configurations apart from `bleach_scheme`. The
+[scheme audit](validation/2026-09-21/scheme_matrix.json) and independent review
+pass: zero transfer in scheme 0; one-day lifetime in scheme 1; both existing
+lifetime regimes in scheme 2; bounded spatially varying, distinguishable
+schemes 3/4. Every acknowledged dry-run and model log reports its selection.
+This satisfies issue #17's engineering gate, not parameter promotion. The
+separate 24-hour radiation case also completed normally. Its four exact
+six-hour snapshots pass the [day audit](validation/2026-09-21/day_smoke.json)
+and independent review: active FFOC concentrations/conversion; finite positive
+BrC AOD and BRC/BRCT/PM/DU optics at all three wavelengths; distinct PM/BrC
+masks and finite radiation fluxes. Together with the earlier one-hour
+RRTMG-on/off builds and runs, this satisfies wrapper issue #7's engineering
+matrix. The day uses archived binary `aaba4936`; the later fresh-binary GFED
+and QFED one-hour runs are recorded separately, not relabeled as day tests.
+
+The first day auditor incorrectly requested HISTORY placeholders `WL1/2/3`
+as netCDF field names. The actual output expands these to `527.1nm`, `550nm`,
+and `693.5nm`. The failed audit is preserved, output was not changed, and a
+new full four-snapshot synthetic regression checks both the correct names and
+rejection of placeholders/duplicate times. All three AOD wavelengths are now
+required, not only the first.
+
+## Existing fire inventories
+
+See [selection and diagnostic instructions](BRC_FIRE_INVENTORIES.md).
+QFED2 now has a default-off harmonized BrC proxy option. The paired one-hour
+proxy-off/on runs completed normally using fresh Cloud-J/RRTMG executable
+SHA256 `30377e1d0823f99a1d6a2806a23954ab16eccc7555495076dfe28e510e52ed8d`
+(wrapper build origin `f30a54a`, core `b34f550`, HEMCO `c06052a`, Cloud-J
+`f78dca8`). Both cases keep BrC chemistry enabled, the same inputs and QFED's
+existing vertical partition; only the proxy switch differs. CO/BC are exactly
+unchanged, OC partition closure is 9.62e-8, and profile/proxy errors are below
+2.83e-7 (gate 2e-6). The [paired audit](validation/2026-09-21/qfed_pair.json),
+[BrC/RRTMG audit](validation/2026-09-21/qfed_brc_smoke.json), and independent
+finite-field review pass. This is not an inventory-attribution experiment or
+total fire-carbon budget. FINNv2.5 has source/static support but no new runtime
+qualification because its configured canonical input data are absent locally.
+
+## August 2018 comparison staging
 
 `prepare_brc_fastjx_smoke.py` stages a separate one-hour FAST-JX case with
 JValues. It does not copy a Cloud-J executable or submit a run. Both workflows
@@ -74,10 +123,54 @@ not yet establish that the month-long model runs are ready or completed.
 All 32 files have passed native CO profile/column numeric QC, including
 finite/nonnegative values and nonzero elevated emissions.
 
-August staging is deliberately not launch-ready: the archived August-1
-restart lacks PBRCPOA, FFOCPI and FFOCPO, and complete transported-species
-coverage still needs checking. Identical cold initialization versus a spinup
-is awaiting the user's choice. The legacy shared-injection configuration
-must retain its complete gas/aerosol mapping and residual-OC partition.
+August staging is deliberately not launch-ready. Full transported-species
+coverage finds 274/277 fields for 14.7 and 274/278 for 14.8 in the archived
+August-1 restart. Both lack PBRCPOA, FFOCPI and FFOCPO; 14.8 also lacks MDL.
+Explicit cold initialization versus a July spinup is awaiting the user's
+choice; no derived restart or month-long run has been created. The archived
+restart originated in a GFED run, which is another comparison caveat.
+
+The 14.7 draft was repaired to retain all 31 legacy GFAS mapping rows
+(30 targets, including both PRPE source fields), residual OC and complete gas
+chemistry inputs. All 23 distinct source variables were verified in every one
+of the 32 native daily files; units/shapes and numerical scalar identities
+pass. Original partial drafts are preserved. The legacy GFAS shared-injection
+extension is resolved by name, set to 30% FT over 15 levels, and cannot also
+emit from the direct surface block. The 14.8 case uses native variable-height
+GFAS. Both keep the existing optics and use Cloud-J/RRTMG and scheme 4.
+
+The isolated 14.7 reference is frozen at wrapper `c2bbfe2` (manifest-only child
+of `25a81c2`), core `c72cbb3`, HEMCO `17d31b9`, Cloud-J `f33a1b0`, HETP
+`2a99b24`, and KPP `eeee895`. It is a local independent source copy, not a
+mutable donor symlink; the original 14.7 worktree is untouched. Configure
+passes; build and one-hour qualification are separate readiness gates.
+
 Broad HISTORY output is monthly (`00000100 000000`), with daily RRTMG and
 BrCDiagnostics (`00000001 000000`); `00010000` would incorrectly mean a year.
+Both corrected HISTORY files pass calendar-aware cadence checks. Planeflight
+uses the existing 20 August WE-CAN sampling dates and 40 requested fields,
+including the shared BrC/FFOC/CO/BC/OC and meteorological diagnostics. Retain
+the known August-26 sampling gap. Profile comparisons must match sampled
+timestamps/locations/pressures; they cannot isolate a version effect from the
+different injection schemes or eliminate initialization effects.
+
+Independent availability review finds all six configured MERRA2 families
+(`A1`, `I3`, `A3dyn`, `A3mstE`, `A3mstC`, `A3cld`) for all 31 August days and
+the September-1 boundary. All 20 planeflight symlink targets resolve. This
+does not replace the final run-steward review of the executable and restart.
+
+## Regression record
+
+The final wrapper unit suite passes 86 tests. QFED parsed effective-row and
+numeric-chain checks, static wiring, and both standard BioBurn diagnostic
+template tests pass. These checks supplement the model outputs above; none
+changes optical tables or grants physical calibration of the current proxies.
+
+The new `compare_planeflight_profiles.py` validates full input-schedule key
+coverage, timestamps and coordinates (including longitude normalization),
+identical schedule hashes, named chemical fields, finite/nonnegative values,
+and paired pressure-bin summaries. It rejects nonportable `TRA_*` fields and
+does not assign chemical units to met/AOD outputs. Nine synthetic tests pass;
+a self-pair of 149 existing August-1 legacy samples also passes with zero
+differences. That self-test is explicitly NOT a 14.7/14.8 result. See the
+[August analysis contract](BRC_AUG2018_COMPARISON.md) for the eventual command.

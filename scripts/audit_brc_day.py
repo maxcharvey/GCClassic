@@ -11,6 +11,17 @@ import numpy as np
 from audit_brc_smoke import check_run
 from prepare_brc_engineering_matrix import sha256
 
+# HISTORY's WL1/WL2/WL3 tokens expand to physical wavelength suffixes in
+# netCDF output. These are the declared wavelengths of this frozen matrix.
+WAVELENGTHS = ('527.1nm', '550nm', '693.5nm')
+REQUIRED_GROUPS = {
+    'SpeciesConc': ('SpeciesConcVV_FFOCPI', 'SpeciesConcVV_FFOCPO', 'ProdFFOCPIfromFFOCPO'),
+    'RRTMG': tuple(f'RadAOD{wl}_{mask}' for wl in WAVELENGTHS for mask in ('BRC', 'BRCT', 'PM', 'DU')),
+    'Aerosols': tuple(f'AODHyg{wl}_{sp}' for wl in WAVELENGTHS
+                      for sp in ('BRCSOA', 'NPBRCPOA', 'PBRCPOA', 'WTC', 'FSOAS')),
+    'BrCDiagnostics': ('BrCAbsMass', 'BrCTotMass'),
+}
+
 
 def field(nc, name):
     if name not in nc:
@@ -49,12 +60,7 @@ def audit(root):
             errors.append(f'input hash changed: {name}')
     start = datetime.fromisoformat(entry['start'].removesuffix('Z'))
     expected = {start + timedelta(hours=h) for h in (6, 12, 18, 24)}
-    groups = {
-        'SpeciesConc': ('SpeciesConcVV_FFOCPI', 'SpeciesConcVV_FFOCPO', 'ProdFFOCPIfromFFOCPO'),
-        'RRTMG': tuple(f'RadAODWL{wl}_{mask}' for wl in (1, 2, 3) for mask in ('BRC', 'BRCT', 'PM', 'DU')),
-        'Aerosols': tuple('AODHygWL1_' + sp for sp in ('BRCSOA', 'NPBRCPOA', 'PBRCPOA', 'WTC', 'FSOAS')),
-        'BrCDiagnostics': ('BrCAbsMass', 'BrCTotMass'),
-    }
+    groups = REQUIRED_GROUPS
     distinct = False
     for collection, required in groups.items():
         paths = sorted((run / 'OutputDir').glob(f'GEOSChem.{collection}.*.nc4'))
@@ -71,7 +77,7 @@ def audit(root):
                             raise ValueError(f'{name}: invalid shape or negative values')
                         maxima[name] = max(maxima.get(name, 0.), float(arr.max()))
                     if collection == 'RRTMG':
-                        pm, brc = field(nc, 'RadAODWL2_PM'), field(nc, 'RadAODWL2_BRC')
+                        pm, brc = field(nc, 'RadAOD550nm_PM'), field(nc, 'RadAOD550nm_BRC')
                         distinct |= pm.shape == brc.shape and not np.array_equal(pm, brc)
                         for mask in ('BASE', 'BRC', 'BRCT', 'PM', 'DU'):
                             field(nc, f'RadAllSkySWTOA_{mask}')

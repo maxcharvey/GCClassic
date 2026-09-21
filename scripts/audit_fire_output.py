@@ -11,6 +11,7 @@ import numpy as np
 REQUIRED = ("EmisCO_Fire", "EmisBCPI_Fire", "EmisBCPO_Fire",
             "EmisOCPI_Fire", "EmisOCPO_Fire", "EmisFSOAP_Fire",
             "EmisNPBRCPOA_Fire", "EmisPBRCPOA_Fire", "EmisDBRCPOA_Fire")
+COLUMN_REQUIRED = tuple(name.replace("_Fire", "_FireColumn") for name in REQUIRED)
 
 
 def _datasets(group, prefix=""):
@@ -34,6 +35,18 @@ def _field(ds):
     return arr
 
 
+def _column(ds):
+    """Canonicalize GFAS columns: (lat,lon) or time=1 thereof."""
+    arr = np.asarray(ds[...], dtype=float)
+    if arr.ndim == 3:
+        if arr.shape[0] != 1:
+            raise ValueError("rank-3 fire columns must have one time record")
+        arr = arr[0]
+    if arr.ndim != 2:
+        raise ValueError("fire columns must be rank-2 or rank-3 with time=1")
+    return arr
+
+
 def _closure_error(actual, expected):
     scale = np.maximum(np.abs(expected), 1e-25)
     return float(np.max(np.abs(actual - expected) / scale))
@@ -50,12 +63,21 @@ def audit(path, inventory="gfas"):
         if missing:
             errors.append("missing required HEMCO diagnostics: " + ", ".join(missing))
             return {"file": str(Path(path).resolve()), "status": "FAIL", "errors": errors}
+        missing_columns = [name for name in COLUMN_REQUIRED if name not in fields]
+        if missing_columns:
+            return {"file": str(Path(path).resolve()), "status": "FAIL",
+                    "errors": ["missing required fire columns: " + ", ".join(missing_columns)]}
         try:
             data = {name: _field(fields[name]) for name in REQUIRED}
+            columns = {name: _column(fields[name]) for name in COLUMN_REQUIRED}
         except ValueError as exc:
             return {"file": str(Path(path).resolve()), "status": "FAIL", "errors": [str(exc)]}
         if len({arr.shape for arr in data.values()}) != 1:
             return {"file": str(Path(path).resolve()), "status": "FAIL", "errors": ["required fire fields have mismatched dimensions"]}
+        column_shapes = {arr.shape for arr in columns.values()}
+        profile_shape = next(iter({arr.shape for arr in data.values()}))
+        if len(column_shapes) != 1 or next(iter(column_shapes)) != profile_shape[1:]:
+            return {"file": str(Path(path).resolve()), "status": "FAIL", "errors": ["required fire profile/column dimensions do not match"]}
         for name, arr in data.items():
             if not np.all(np.isfinite(arr)):
                 errors.append(f"{name} contains NaN/Inf")
@@ -63,6 +85,16 @@ def audit(path, inventory="gfas"):
                 errors.append(f"{name} contains negative values")
             if arr.ndim >= 3 and not np.any(arr[1:] > 0):
                 errors.append(f"{name} has no above-level-1 injection")
+        for name, arr in columns.items():
+            if not np.all(np.isfinite(arr)):
+                errors.append(f"{name} contains NaN/Inf")
+            if np.any(arr < 0):
+                errors.append(f"{name} contains negative values")
+            base = name.replace("_FireColumn", "_Fire")
+            err = _closure_error(arr, data[base].sum(axis=0))
+            metrics[name + "_profile_sum_max_relative_error"] = err
+            if err > 2e-6:
+                errors.append(f"{name} does not equal profile sum")
         if errors:
             return {"file": str(Path(path).resolve()), "inventory": inventory,
                     "status": "FAIL", "metrics": metrics, "errors": errors}
@@ -85,7 +117,8 @@ def audit(path, inventory="gfas"):
             errors.append("OCPI+OCPO=4*PBRC closure failed")
     return {"file": str(Path(path).resolve()), "inventory": inventory,
             "status": "FAIL" if errors else "PASS", "metrics": metrics,
-            "errors": errors}
+            "errors": errors,
+            "scope": "GFAS diagnostic accumulation/profile closure only; not independent global emissions-mass validation"}
 
 
 if __name__ == "__main__":

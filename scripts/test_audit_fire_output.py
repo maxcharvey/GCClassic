@@ -28,6 +28,7 @@ class FireOutputTests(unittest.TestCase):
             vals["EmisFSOAP_Fire"][0] += 0.0 if not bad else 1e-11
             for name, value in vals.items():
                 f[name] = value
+                f[name.replace("_Fire", "_FireColumn")] = value.sum(axis=0)
         return path
 
     def test_gfas_closures(self):
@@ -35,6 +36,18 @@ class FireOutputTests(unittest.TestCase):
 
     def test_bad_fsoap_fails(self):
         self.assertEqual(audit(self.make_file(True))['status'], 'FAIL')
+
+    def test_bad_npb_column_fails(self):
+        path = self.make_file()
+        with h5py.File(path, "a") as f:
+            f["EmisNPBRCPOA_FireColumn"][0, 0] *= 1.1
+        self.assertEqual(audit(path)['status'], 'FAIL')
+
+    def test_negative_column_fails(self):
+        path = self.make_file()
+        with h5py.File(path, "a") as f:
+            f["EmisCO_FireColumn"][0, 0] = -1e-10
+        self.assertEqual(audit(path)['status'], 'FAIL')
 
     def test_rank_and_shape_contracts_fail(self):
         path = self.make_file()

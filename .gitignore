@@ -1,5 +1,8 @@
 build/
 build_*/
+build_*.log
+# NetCDF feature-test artifact written by CMake configuration.
+/simple_xy.nc
 *.mod
 CLAUDE.md
 __pycache__/

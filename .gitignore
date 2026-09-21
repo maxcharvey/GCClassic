@@ -1,4 +1,6 @@
 build/
 build_*/
 *.mod
+CLAUDE.md
+__pycache__/
 **/.DS_Store

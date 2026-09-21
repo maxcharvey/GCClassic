@@ -44,6 +44,12 @@ class FireOutputTests(unittest.TestCase):
         self.assertEqual(audit(path, "gfed")["status"], "PASS")
         self.assertTrue(audit(path, "gfed")["scope"].startswith("GFED "))
         self.assertEqual(audit(path, "gfas")["status"], "FAIL")
+        self.assertEqual(audit(path, "gfed", require_elevated=True)["status"], "FAIL")
+
+    def test_gfed_positive_injection_closures(self):
+        result = audit(self.make_file(), "gfed", require_elevated=True)
+        self.assertEqual(result["status"], "PASS")
+        self.assertAlmostEqual(result["metrics"]["EmisPBRCPOA_Fire_above_level_1_fraction"], 2 / 3)
 
     def test_empty_gfed_fails(self):
         path = self.make_file()

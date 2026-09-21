@@ -52,7 +52,7 @@ def _closure_error(actual, expected):
     return float(np.max(np.abs(actual - expected) / scale))
 
 
-def audit(path, inventory="gfas"):
+def audit(path, inventory="gfas", require_elevated=False):
     errors = []
     metrics = {}
     with h5py.File(path, "r") as nc:
@@ -85,7 +85,10 @@ def audit(path, inventory="gfas"):
                 errors.append(f"{name} contains negative values")
             if not np.any(arr > 0):
                 errors.append(f"{name} has no positive fire emissions")
-            if inventory == "gfas" and arr.ndim >= 3 and not np.any(arr[1:] > 0):
+            metrics[name + "_above_level_1_fraction"] = (
+                float(arr[1:].sum() / arr.sum())
+                if np.all(np.isfinite(arr)) and arr.sum() > 0 else 0.0)
+            if (inventory == "gfas" or require_elevated) and not np.any(arr[1:] > 0):
                 errors.append(f"{name} has no above-level-1 injection")
         for name, arr in columns.items():
             if not np.all(np.isfinite(arr)):
@@ -127,7 +130,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("file", type=Path)
     parser.add_argument("--inventory", choices=("gfas", "gfed"), default="gfas")
+    parser.add_argument("--require-elevated", action="store_true",
+                        help="Reject surface-only profiles in a positive-injection test")
     args = parser.parse_args()
-    report = audit(args.file, args.inventory)
+    report = audit(args.file, args.inventory, args.require_elevated)
     print(json.dumps(report, indent=2, allow_nan=False))
     raise SystemExit(0 if report["status"] == "PASS" else 1)

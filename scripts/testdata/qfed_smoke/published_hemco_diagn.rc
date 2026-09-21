@@ -1,0 +1,19 @@
+# Portable fire-auditor diagnostic excerpt from published GFED fixture.
+EmisCO_Fire CO 111 -1 -1 3 kg/m2/s CO_fire
+EmisBCPI_Fire BCPI 111 -1 -1 3 kg/m2/s BCPI_fire
+EmisBCPO_Fire BCPO 111 -1 -1 3 kg/m2/s BCPO_fire
+EmisOCPI_Fire OCPI 111 -1 -1 3 kg/m2/s OCPI_fire
+EmisOCPO_Fire OCPO 111 -1 -1 3 kg/m2/s OCPO_fire
+EmisFSOAP_Fire FSOAP 111 -1 -1 3 kg/m2/s FSOAP_fire
+EmisDBRCPOA_Fire DBRCPOA 111 -1 -1 3 kg/m2/s DBRCPOA_fire
+EmisNPBRCPOA_Fire NPBRCPOA 111 -1 -1 3 kg/m2/s NPBRCPOA_fire
+EmisPBRCPOA_Fire PBRCPOA 111 -1 -1 3 kg/m2/s PBRCPOA_fire
+EmisCO_FireColumn CO 111 -1 -1 2 kg/m2/s CO_column
+EmisBCPI_FireColumn BCPI 111 -1 -1 2 kg/m2/s BCPI_column
+EmisBCPO_FireColumn BCPO 111 -1 -1 2 kg/m2/s BCPO_column
+EmisOCPI_FireColumn OCPI 111 -1 -1 2 kg/m2/s OCPI_column
+EmisOCPO_FireColumn OCPO 111 -1 -1 2 kg/m2/s OCPO_column
+EmisFSOAP_FireColumn FSOAP 111 -1 -1 2 kg/m2/s FSOAP_column
+EmisDBRCPOA_FireColumn DBRCPOA 111 -1 -1 2 kg/m2/s DBRCPOA_column
+EmisNPBRCPOA_FireColumn NPBRCPOA 111 -1 -1 2 kg/m2/s NPBRCPOA_column
+EmisPBRCPOA_FireColumn PBRCPOA 111 -1 -1 2 kg/m2/s PBRCPOA_column

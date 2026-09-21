@@ -1,0 +1,14 @@
+# Portable excerpt preserving valid HISTORY collection syntax.
+COLLECTIONS: 'Restart',
+    'Aerosols',
+    'BrCDiagnostics',
+    'RRTMG',
+::
+  Restart.frequency: 00000000 010000
+  Restart.duration: 00000000 010000
+  Aerosols.frequency: 00000000 010000
+  Aerosols.duration: 00000000 010000
+  BrCDiagnostics.frequency: 00000000 010000
+  BrCDiagnostics.duration: 00000000 010000
+  RRTMG.frequency: 00000000 010000
+  RRTMG.duration: 00000000 010000

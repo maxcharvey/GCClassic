@@ -1,0 +1,34 @@
+# Minimal portable excerpt of published BRC_BASE_GFED_ONLINE_ISSUES_RETRY_20260921.
+# It intentionally predates QFED2_BRC_HARMONIZED_SENSITIVITY and IDs 288--292.
+### BEGIN SECTION SETTINGS
+    --> QFED2                  : false
+    --> GFED4_CLIMATOLOGY      : false
+    --> FINNv25                : false
+    --> FINNV25_BRC_HARMONIZED_SENSITIVITY : false
+    --> GFAS_BRC_HARMONIZED_SENSITIVITY : false
+    --> BB4MIPS                : false
+    --> GFED4                  : true
+    --> GFED_daily             : false
+    --> GFED_3hourly           : false
+### BEGIN SECTION EXTENSION SWITCHES
+111     GFED                   : on    CO/OCPI/OCPO
+112     GFAS                   : off   CO/OCPI/OCPO
+165     FINNv25_Inject          : off   CO/OCPI/OCPO
+# --- QFED2 biomass burning (v2.5r1) ---
+(((QFED2
+0 QFED_OCPI_PBL $ROOT/QFED/v2018-07/$YYYY/$MM/qfed2.emis_oc.006.$YYYY$MM$DD.nc4 biomass 2000-2022/1-12/1-31/0/+12hour EFY xyL=1:PBL kg/m2/s OCPI 72/75/311 5 2
+0 QFED_OCPO_FT  $ROOT/QFED/v2018-07/$YYYY/$MM/qfed2.emis_oc.006.$YYYY$MM$DD.nc4 biomass 2000-2022/1-12/1-31/0/+12hour EFY xyL=PBL:5500m kg/m2/s OCPO 73/75/312 5 2
+)))QFED2
+### BEGIN SECTION SCALE FACTORS
+54 Scaling_CO 1.05 - - - xy 1
+70 BCPIfrac 0.2 - - - xy 1
+71 BCPOfrac 0.8 - - - xy 1
+72 OCPIfrac 0.5 - - - xy 1
+73 OCPOfrac 0.5 - - - xy 1
+74 POGfrac 1.27 - - - xy 1
+75 QFED2_TOD 1.0 - - - xy 1
+76 POG1frac 0.49 - - - xy 1
+77 POG2frac 0.51 - - - xy 1
+311 QFED_PBL_FRAC 0.65 - - - xy 1
+312 QFED_FT_FRAC 0.35 - - - xy 1
+### END SECTION SCALE FACTORS ###

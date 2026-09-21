@@ -57,7 +57,7 @@ def audit(path, inventory="gfas", require_elevated=False):
     metrics = {}
     with h5py.File(path, "r") as nc:
         fields = {name.rsplit("/", 1)[-1]: ds for name, ds in _datasets(nc)}
-        if inventory not in ("gfas", "gfed"):
+        if inventory not in ("gfas", "gfed", "qfed2", "finnv25"):
             return {"status": "FAIL", "errors": [f"unsupported inventory: {inventory}"]}
         missing = [name for name in REQUIRED if name not in fields]
         if missing:
@@ -129,7 +129,7 @@ def audit(path, inventory="gfas", require_elevated=False):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("file", type=Path)
-    parser.add_argument("--inventory", choices=("gfas", "gfed"), default="gfas")
+    parser.add_argument("--inventory", choices=("gfas", "gfed", "qfed2", "finnv25"), default="gfas")
     parser.add_argument("--require-elevated", action="store_true",
                         help="Reject surface-only profiles in a positive-injection test")
     args = parser.parse_args()

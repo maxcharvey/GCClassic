@@ -2,7 +2,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from check_brc_history import check_history
+from check_brc_history import cadence_errors, check_history
 
 
 GOOD = """COLLECTIONS: 'Restart',
@@ -17,6 +17,27 @@ Aerosols.template: '%y4%m2%d2_%h2%n2z.nc4',
 
 
 class HistoryTests(unittest.TestCase):
+    def test_monthly_calendar_cadence(self):
+        text = "  Restart.frequency: 00000100 000000\n  Restart.duration: 00000100 000000\n"
+        self.assertEqual(cadence_errors(text, ["Restart"], "2018-08-01", "2018-09-01"), [])
+        self.assertTrue(cadence_errors(text.replace("00000100", "00010000"),
+                                       ["Restart"], "2018-08-01", "2018-09-01"))
+
+    def test_daily_and_inactive_collections(self):
+        text = "  BrCDiagnostics.frequency: 00000001 000000\n  BrCDiagnostics.duration: 00000001 000000\n"
+        self.assertEqual(cadence_errors(text, ["BrCDiagnostics"], "2018-08-01", "2018-09-01"), [])
+
+    def test_long_run_hourly_and_missing_duration_fail(self):
+        text = "  Aerosols.frequency: 00000000 010000\n  Aerosols.duration: 00000000 010000\n"
+        self.assertEqual(cadence_errors(text, ["Aerosols"], "2018-08-01", "2018-08-01T01:00:00"), [])
+        self.assertTrue(cadence_errors(text, ["Aerosols"], "2018-08-01", "2018-09-01"))
+        self.assertTrue(cadence_errors(text.splitlines()[0], ["Aerosols"], "2018-08-01", "2018-08-02"))
+
+    def test_zero_cadence_and_end_before_start_fail(self):
+        text = "Restart.frequency: 00000000 000000\nRestart.duration: 'End',\n"
+        self.assertTrue(cadence_errors(text, ["Restart"], "2018-08-01", "2018-09-01"))
+        self.assertTrue(cadence_errors(text, ["Restart"], "2018-09-01", "2018-08-01"))
+
     def run_text(self, text, brc="on", rrtmg="on"):
         tmp = tempfile.NamedTemporaryFile(mode="w", suffix=".rc", delete=False)
         self.addCleanup(lambda: Path(tmp.name).unlink(missing_ok=True))

@@ -34,6 +34,12 @@ class FireOutputTests(unittest.TestCase):
     def test_gfas_closures(self):
         self.assertEqual(audit(self.make_file())['status'], 'PASS')
 
+    def test_other_harmonized_inventory_closures(self):
+        for inventory in ('qfed2', 'finnv25'):
+            with self.subTest(inventory=inventory):
+                self.assertEqual(audit(self.make_file(), inventory, True)['status'], 'PASS')
+                self.assertEqual(audit(self.make_file(True), inventory, True)['status'], 'FAIL')
+
     def test_gfed_surface_only_closures(self):
         path = self.make_file()
         with h5py.File(path, "a") as f:

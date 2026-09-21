@@ -10,6 +10,17 @@ import subprocess
 
 from prepare_brc_engineering_matrix import sha256
 
+DRYRUN_ARGUMENT = '--dryrun'
+
+
+def validate_dryrun(run, returncode):
+    if returncode:
+        raise RuntimeError(f'Dry-run failed for {run.name}: {returncode}')
+    if 'GEOS-CHEM IS IN DRY-RUN MODE!' not in (run / 'dryrun.log').read_text(errors='replace'):
+        raise RuntimeError(f'Dry-run was not acknowledged for {run.name}')
+    if list((run / 'OutputDir').glob('*.nc*')):
+        raise RuntimeError(f'Dry-run unexpectedly wrote model output for {run.name}')
+
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -35,10 +46,9 @@ def main():
         start = datetime.now(timezone.utc).isoformat()
         print(f'{start} START {run.name}', flush=True)
         with (run / 'dryrun.log').open('x') as log:
-            dry = subprocess.run(['./gcclassic', '--dry-run'], cwd=run, env=env,
+            dry = subprocess.run(['./gcclassic', DRYRUN_ARGUMENT], cwd=run, env=env,
                                  stdout=log, stderr=subprocess.STDOUT)
-        if dry.returncode:
-            raise RuntimeError(f'Dry-run failed for {run.name}: {dry.returncode}')
+        validate_dryrun(run, dry.returncode)
         with (run / 'GC.log').open('x') as log:
             result = subprocess.run(['./gcclassic'], cwd=run, env=env,
                                     stdout=log, stderr=subprocess.STDOUT)

@@ -17,8 +17,13 @@ class SmokeAuditTests(unittest.TestCase):
         (root / "OutputDir").mkdir()
         (root / "GC.log").write_text("E N D   O F   G E O S -- C H E M")
         with h5py.File(root / "OutputDir/GEOSChem.Aerosols.test.nc4", "w") as f:
-            f["BrCDryAOD527.1nm"] = np.full((1, 2, 1, 1), dry)
-            f["AODHyg527.1nm_DBRCPOA"] = np.full((1, 2, 1, 1), parent)
+            for wl in ("470nm", "527.1nm", "660nm"):
+                f[f"BrCDryAOD{wl}"] = np.full((1, 2, 1, 1), dry)
+                f[f"AODHyg{wl}_DBRCPOA"] = np.full((1, 2, 1, 1), parent)
+            f["BrCAbsMass"] = np.full((1, 2, 1, 1), 0.1)
+            f["BrCTotMass"] = np.full((1, 2, 1, 1), 0.2)
+            f["BrCAbsMass"].attrs["units"] = "kgC m-3"
+            f["BrCTotMass"].attrs["units"] = "kgC m-3"
         return root
 
     def test_enabled_nonzero_closure(self):
@@ -38,6 +43,18 @@ class SmokeAuditTests(unittest.TestCase):
 
     def test_nonzero_disabled_fails(self):
         self.assertEqual(check_run(self.fixture(), "off")["status"], "FAIL")
+
+    def test_disabled_brc_with_rrtmg_nonzero_brc_rad_aod_fails(self):
+        root = self.fixture(0, 0)
+        with h5py.File(root / "OutputDir/GEOSChem.RRTMG.test.nc4", "w") as f:
+            f["RadAOD_BRC"] = np.ones((1, 1, 1))
+        self.assertEqual(check_run(root, "off", "on")["status"], "FAIL")
+
+    def test_missing_carbon_field_fails(self):
+        root = self.fixture()
+        with h5py.File(root / "OutputDir/GEOSChem.Aerosols.test.nc4", "a") as f:
+            del f["BrCAbsMass"]
+        self.assertEqual(check_run(root, "on")["status"], "FAIL")
 
 
 if __name__ == "__main__":

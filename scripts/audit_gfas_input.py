@@ -38,7 +38,8 @@ def audit(path):
             result["co_elevated_sum"] += float(profile[1:].sum())
     result["status"] = "PASS" if (not result["invalid"] and not result["negative"]
         and not result["surface_without_profile"] and result["active_columns"] > 0
-        and result["co_elevated_sum"] > 0) else "FAIL"
+        and result["co_elevated_sum"] > 0
+        and result["max_column_relative_difference"] <= 2e-6) else "FAIL"
     result["note"] = "Unweighted cell-flux sums are QC only, not global emissions mass."
     return result
 

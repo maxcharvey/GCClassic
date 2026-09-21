@@ -62,6 +62,32 @@ Dedicated optical tables need provenance, matching Cloud-J/online mappings,
 and separate physical qualification. WTC does not retain POA/SOA provenance;
 any allocation of its mass to component PM diagnostics must be documented.
 
+## Selecting the new GFAS pathway
+
+Create a new fullchem/RRTMG run directory from this checkout, then explicitly
+set `aerosols.carbon.brown_carbon: true`. In `HEMCO_Config.rc`, enable GFAS
+extension 112, disable GFED and FINN, and set
+`GFAS_BRC_HARMONIZED_SENSITIVITY : true` to exercise the controlled BrC
+proxy emissions. Leave the official `GFAS_CO_3D` reference mapping intact
+and supply the v2026-06 daily GFAS files. This switch applies the existing
+BrC proxy assumptions; it does not infer measured BrC speciation from GFAS.
+
+The ordinary GFAS configuration leaves the sensitivity disabled. Do not
+confuse GFAS's native daily 3D profile with GFED/FINN's optional prescribed
+elevated fraction/level controls. Online AOD and RRTMG use
+`aerosols.carbon.brc_optics`; Cloud-J separately uses
+`operations.photolysis.cloud-j.brc_optics`. Both default to `organic`.
+The online table directory is configurable at `aerosols.optics.input_dir`.
+Only select `dedicated` after qualifying the corresponding tables.
+
+For a BrC-off control, remove explicit inactive BrC `AODHyg` species from
+HISTORY. For an RRTMG-off build, disable the runtime RRTMG switch and its
+HISTORY collection; the separate BrC online-AOD diagnostics remain usable.
+
+To publish later, push GEOS-Chem, HEMCO and Cloud-J integration branches
+to their development forks first, then the GCClassic wrapper branch.
+All are local until explicitly pushed.
+
 ## Validation record
 
 Source cascade reviewed independently on 2026-09-21: PASS for GEOS-Chem
@@ -69,7 +95,9 @@ Source cascade reviewed independently on 2026-09-21: PASS for GEOS-Chem
 `8195cd9a01cda6f93540329b2f4c19dc3ffc2554`, and Cloud-J
 `f78dca88e8767f9885e98a2889e89233ddeedf54`. HEMCO numerical CTest:
 2/2 PASS on Euler compute node eu-a2p-309, allocation 14787003.
-Wrapper Python regression tests: 7/7 PASS. Full model compilation and
+Test-only core follow-up: `205c55493` (FINNv25 template regression and
+isolated optics-test module files; no production Fortran change).
+Wrapper Python regression tests: 13/13 PASS. Full model compilation and
 short runtime validation are still in progress; source review is not
 runtime qualification.
 

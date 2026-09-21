@@ -174,3 +174,12 @@ Publication procedure: push the three modified submodules first, then the
 wrapper. Verify remote tips with `check_brc_submodule_contract.py --remote`
 and repeat the check in a fresh recursive clone. The final documentation
 commit may follow the runtime wrapper pin above; do not relabel that run.
+
+Publication verification succeeded for wrapper `ec79d987` and the final
+submodule pins above: remote-tip checks and a fresh recursive clone both
+PASS, and all 50 wrapper tests pass in that clone. GitHub Actions then
+exposed a test-fixture portability bug: clones do not inherit repository-local
+Git author identity, so two negative contract tests could not create their
+intentional drift commits. Configure identity inside every temporary clone;
+the 11 contract tests pass with system/global Git configuration disabled.
+This follow-up changes only the test harness, not model code or run evidence.

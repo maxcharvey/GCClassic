@@ -42,6 +42,7 @@ class SubmoduleContractTests(unittest.TestCase):
             target = self.root / path
             target.parent.mkdir(parents=True, exist_ok=True)
             run(self.root, "git", "clone", "--quiet", str(source), str(target))
+            self.configure_identity(target)
             run(target, "git", "remote", "set-url", "origin", url)
             entries.extend((f'[submodule "{path}"]', f"\tpath = {path}", f"\turl = {url}"))
 
@@ -55,10 +56,14 @@ class SubmoduleContractTests(unittest.TestCase):
         run(self.root, "git", "commit", "-m", "wrapper")
 
     @staticmethod
-    def init_repo(path):
-        run(path, "git", "init", "--quiet")
+    def configure_identity(path):
         run(path, "git", "config", "user.email", "test@example.invalid")
         run(path, "git", "config", "user.name", "test")
+
+    @classmethod
+    def init_repo(cls, path):
+        run(path, "git", "init", "--quiet")
+        cls.configure_identity(path)
 
     def report(self):
         return contract.check_contract(self.root, expected_urls=URLS)
@@ -122,6 +127,7 @@ class SubmoduleContractTests(unittest.TestCase):
         run(source, "git", "commit", "-m", "nested")
         nested = parent / "nested"
         run(parent, "git", "clone", "--quiet", str(source), str(nested))
+        self.configure_identity(nested)
         (parent / ".gitmodules").write_text(
             '[submodule "nested"]\n\tpath = nested\n\turl = https://example.invalid/nested.git\n'
         )

@@ -13,13 +13,34 @@ Case names are `BRC_147_GFAS_FIXED30_L15_20260921` and
 
 ## Launch gate
 
-The month is **not launched**. The archived Aug-1 GEOS restart lacks PBRCPOA,
-FFOCPI and FFOCPO in both configurations, plus MDL in 14.8; it originated in
-a GFED simulation. A user choice between explicit cold initialization and
-July spinups is required. Then freeze matching executables/restarts, complete
-independent run-steward review, and qualify a separately staged one-hour case
-before launching the month. Do not overwrite the archived restart or treat
-the optional HEMCO restart as interchangeable with a GEOS restart.
+As of 2026-09-22, both final one-hour cases passed automated and independent
+runtime gates. August jobs `14846000` (14.7) and `14846002` (14.8) were submitted;
+analysis `14846163` depends on both simulations and their output audits. Month
+completion and science interpretation remain pending. Published smoke reports,
+independent verdict, acceptance hashes and original executable provenance are
+in [validation/2026-09-22](validation/2026-09-22/).
+
+The exact-date archived restart lacks three transported/KPP-union fields in
+14.7 and nine in 14.8 (including the five nontransported HMS/sulfate participants).
+Strict file/date/grid/species checks guard native `EY` fallback. Seven misspelled
+`BackgroundVV` keys were corrected to the reader's `Background_VV`, preserving
+intended values while activating their effect. The archive is unchanged; July
+spinup remains an optional sensitivity, not a launch permission still awaited.
+
+Both cases now use 550 nm AOD, all four radiation flux switches enabled and
+1200-second radiation calls. Earlier disabled-flux/wavelength/cadence attempts
+are superseded. These settings belong only to this comparison recipe, not the
+global model defaults. Core/HEMCO/Cloud-J algorithms and optical tables were not
+changed during this run-directory qualification.
+
+For a new campaign staging copy, use the published
+[August workflow](../scripts/august2018/README.md), installed with
+`python scripts/install_august_workflow.py /path/to/new/root`. It includes
+preparation, strict preflight, smoke/month audits, hash-bound independent
+acceptance, guarded Slurm submission, and automatic paired analysis. Do not
+install the new tools over the existing running campaign. Its accepted snapshots
+and binary build pins remain immutable; publishing new source does not claim
+that those source commits built the already running executables.
 
 The 32 staged native GFAS files (August plus Sep-1) pass CO profile QC and
 all configured gas/aerosol source-header checks. Required MERRA2 files and all

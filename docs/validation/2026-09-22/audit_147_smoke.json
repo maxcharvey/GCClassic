@@ -1,0 +1,122 @@
+{
+  "status": "PASS",
+  "case": "BRC_147_GFAS_FIXED30_L15_20260921_SMOKE1H_20260922",
+  "configuration_sha256": {
+    "gcclassic": "bae7f81c8ada5130bf63fd2fbe24d355813c0e3a7bfe8458050b54f80e67bcdc",
+    "geoschem_config.yml": "2ba59a4acc400ec956a42c42d915ae6410a43b63e011cc5acfee4c5f21b1f326",
+    "HEMCO_Config.rc": "4481c9183805f7bfbaf34e021e4a7981b71d01372448338d585e1df100d17f43",
+    "HEMCO_Diagn.rc": "bc5e28715efc845ea4a55e2ea79d42eaa75f6dd25881ee9aa7ea024acbe74bff",
+    "HISTORY.rc": "19c41d2ad47b976b39db7f6aa4069f5945416cdc39ca79213445003cce093277",
+    "species_database.yml": "b54d8520add37418f08b94543a8742e94bf508ea6809d2daff0dad9d9ddd21eb",
+    "HEMCO_Config.rc.gmao_metfields": "fc087a5065ad62cb648ff9d76be06695baf354c0bdae85e122e4a9da1f1121c0"
+  },
+  "audit_script_sha256": "3c20d8adfa5b89075f0d46a415904c46ebb8f4e1c1bfa27d2d2192434e01a603",
+  "errors": [],
+  "metrics": {
+    "fallback_backgrounds": {
+      "FFOCPI": 9.999999683e-21,
+      "FFOCPO": 9.999999683e-21,
+      "PBRCPOA": 1.000000046e-18
+    },
+    "radiation_times": [
+      "2018/08/01 00:00",
+      "2018/08/01 00:20",
+      "2018/08/01 00:40"
+    ],
+    "timestamps": {
+      "Restart": [
+        "2018-08-01 01:00:00"
+      ],
+      "SpeciesConc": [
+        "2018-08-01 00:00:00"
+      ],
+      "Aerosols": [
+        "2018-08-01 00:00:00"
+      ],
+      "Budget": [
+        "2018-08-01 00:00:00"
+      ],
+      "RRTMG": [
+        "2018-08-01 00:00:00"
+      ],
+      "StateMet": [
+        "2018-08-01 00:00:00"
+      ],
+      "BrCDiagnostics": [
+        "2018-08-01 00:00:00"
+      ]
+    },
+    "required_maxima": {
+      "SpeciesConcVV_PBRCPOA": 8.870070233868432e-10,
+      "SpeciesConcVV_NPBRCPOA": 1.669399267711924e-07,
+      "SpeciesConcVV_FSOAP": 5.89611603984963e-09,
+      "SpeciesConcVV_DBRCPOA": 1.2864097698184196e-07,
+      "SpeciesConcVV_WTC": 1.4386625935003394e-07,
+      "SpeciesConcVV_BRCSOA": 3.258343150847054e-09,
+      "SpeciesConcVV_FSOAS": 1.8495318609978995e-09,
+      "SpeciesConcVV_FFOCPO": 6.967068588714653e-10,
+      "SpeciesConcVV_FFOCPI": 7.189204787039216e-10,
+      "RadAOD550nm_BRCT": 1.7628257274627686,
+      "RadAOD550nm_BRC": 0.8570954203605652,
+      "BrCDryAOD550nm": 0.04119333624839783,
+      "BrCFluxNPBRC2WTC": 5225.99755859375,
+      "BrCFluxBRC2WTC": 341.43408203125,
+      "BrCFluxFSOAS2BRC": 509.4869384765625,
+      "BrCFluxFSOAP2FSOAS": 1649.3458251953125,
+      "BrCEtaBBOA": 999999995904.0,
+      "BrCKBleach": 4.6296296204673126e-05,
+      "BrCTauBleach": 100000000.0
+    },
+    "fire": [
+      {
+        "file": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/runs/validation/BRC_147_148_GFAS_AUG2018_20260921/BRC_147_GFAS_FIXED30_L15_20260921_SMOKE1H_20260922/OutputDir/HEMCO_diagnostics.201808010000.nc",
+        "inventory": "gfas",
+        "status": "PASS",
+        "metrics": {
+          "EmisCO_Fire_above_level_1_fraction": 0.9245972126965515,
+          "EmisBCPI_Fire_above_level_1_fraction": 0.9229446747307021,
+          "EmisBCPO_Fire_above_level_1_fraction": 0.9229446747307021,
+          "EmisOCPI_Fire_above_level_1_fraction": 0.9304715787327201,
+          "EmisOCPO_Fire_above_level_1_fraction": 0.9304715787327201,
+          "EmisFSOAP_Fire_above_level_1_fraction": 0.924597212176202,
+          "EmisNPBRCPOA_Fire_above_level_1_fraction": 0.9304715786150459,
+          "EmisPBRCPOA_Fire_above_level_1_fraction": 0.9304715787327201,
+          "EmisDBRCPOA_Fire_above_level_1_fraction": 0.9229446745525616,
+          "EmisCO_FireColumn_profile_sum_max_relative_error": 3.1858087414425805e-07,
+          "EmisBCPI_FireColumn_profile_sum_max_relative_error": 2.999179199273885e-07,
+          "EmisBCPO_FireColumn_profile_sum_max_relative_error": 2.999179199273885e-07,
+          "EmisOCPI_FireColumn_profile_sum_max_relative_error": 2.3006001714946957e-07,
+          "EmisOCPO_FireColumn_profile_sum_max_relative_error": 2.3006001714946957e-07,
+          "EmisFSOAP_FireColumn_profile_sum_max_relative_error": 2.1043278365870827e-07,
+          "EmisNPBRCPOA_FireColumn_profile_sum_max_relative_error": 2.4258508507043684e-07,
+          "EmisPBRCPOA_FireColumn_profile_sum_max_relative_error": 2.3006001714946957e-07,
+          "EmisDBRCPOA_FireColumn_profile_sum_max_relative_error": 3.06944128884024e-07,
+          "max_fsoap_co_relative_error": 2.826616645228949e-07,
+          "NPBRC=3*PBRC_max_relative_error": 2.353058368004995e-07,
+          "DBRC=4*(BCPI+BCPO)_max_relative_error": 2.5483929197150046e-07,
+          "OC_total_4PBRC_max_relative_error": 0.0
+        },
+        "errors": [],
+        "scope": "GFAS diagnostic accumulation/profile closure only; not independent global emissions-mass validation"
+      }
+    ],
+    "SOAP_profile_column_max_relative_error": 2.750856253896927e-07,
+    "flight_points": 51,
+    "flight_expected_flushed": 51,
+    "flight_endpoint_caveat": "Native half-diagnostic-step sampling ends00:50;9 scheduled00:51-00:59 points are unflushed at01:00. Midnight endpoint flush applies to month. No rows fabricated.",
+    "time_coverage_basis": "Native global start/end attributes, interval-start time, averaging_method and frozen HISTORY cadence; time_bnds not emitted."
+  },
+  "output_sha256": {
+    "Restarts/GEOSChem.Restart.20180801_0100z.nc4": "9d8252322324735df34852b1965baf37245b84a62c93499ca3101eb8b48e9408",
+    "OutputDir/GEOSChem.SpeciesConc.20180801_0000z.nc4": "1fec38f6b8f2a3714e50f63d3ece5d7f75a9dba9714e001ef28eebc38def4be9",
+    "OutputDir/GEOSChem.Aerosols.20180801_0000z.nc4": "52656f36ff06f01be5f36ce19cecdb3b652593f4f8bf062019b8a8bde0b900bb",
+    "OutputDir/GEOSChem.Budget.20180801_0000z.nc4": "cb7ff10f6e6613238f5f2892a43c78cb9a01ab8c80b85e5cbbbbaaf145a820d4",
+    "OutputDir/GEOSChem.RRTMG.20180801_0000z.nc4": "77106f16761f2064c855991d0f4760fd0cb099ec3f1ddd1561dceddade90739f",
+    "OutputDir/GEOSChem.StateMet.20180801_0000z.nc4": "87cf1cabe7dc37d8e9981fce9b5e77bc411fb17176c185c7da37ed51464be7d8",
+    "OutputDir/GEOSChem.BrCDiagnostics.20180801_0000z.nc4": "b55ae692dbb68dff4c72c2dcefc1b6b96c9e66e9e623c51204fd922186fa138b",
+    "OutputDir/HEMCO_diagnostics.201808010000.nc": "47bbb0fc14133017622791ee4d6acb6b9d023cf301f64128ebb870311494703e",
+    "OutputDir/plane.log.20180801": "253ec22bdb8997aa249f9b4ec819f6f862b22504fafcc830778f7eaed8558e78",
+    "GC.log": "9884ca0236c465d6061280459c812793bbd208dd0a3486b008b53acc27b2e432"
+  },
+  "scope": "one-hour mechanical runtime/restart gate only; version/injection confounded and optics unqualified"
+}

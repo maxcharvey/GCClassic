@@ -1,0 +1,66 @@
+{
+  "utc": "2026-09-22T09:59:32.937103+00:00",
+  "status": "SUBMITTED",
+  "jobs": {
+    "147": {
+      "job_id": "14846000",
+      "command": [
+        "sbatch",
+        "--parsable",
+        "--partition=normal.120h",
+        "--job-name=BRC147_AUG2018",
+        "--output=/cluster/work/climate/mharvey/ModelDevlopment/BrC/runs/validation/BRC_147_148_GFAS_AUG2018_20260921/month_147_%j.out",
+        "--error=/cluster/work/climate/mharvey/ModelDevlopment/BrC/runs/validation/BRC_147_148_GFAS_AUG2018_20260921/month_147_%j.err",
+        "/cluster/work/climate/mharvey/ModelDevlopment/BrC/runs/validation/BRC_147_148_GFAS_AUG2018_20260921/run_month_case.sh",
+        "BRC_147_GFAS_FIXED30_L15_20260921"
+      ],
+      "stderr": ""
+    },
+    "148": {
+      "job_id": "14846002",
+      "command": [
+        "sbatch",
+        "--parsable",
+        "--partition=normal.120h",
+        "--time=192:00:00",
+        "--job-name=BRC148_AUG2018",
+        "--output=/cluster/work/climate/mharvey/ModelDevlopment/BrC/runs/validation/BRC_147_148_GFAS_AUG2018_20260921/month_148_%j.out",
+        "--error=/cluster/work/climate/mharvey/ModelDevlopment/BrC/runs/validation/BRC_147_148_GFAS_AUG2018_20260921/month_148_%j.err",
+        "/cluster/work/climate/mharvey/ModelDevlopment/BrC/runs/validation/BRC_147_148_GFAS_AUG2018_20260921/run_month_case.sh",
+        "BRC_148_GFAS_NATIVE3D_20260921"
+      ],
+      "stderr": ""
+    },
+    "analysis": {
+      "job_id": "14846163",
+      "command": [
+        "sbatch",
+        "--parsable",
+        "--dependency=afterok:14846000:14846002",
+        "--kill-on-invalid-dep=yes",
+        "--job-name=BRC_AUG_ANALYSIS",
+        "--output=/cluster/work/climate/mharvey/ModelDevlopment/BrC/runs/validation/BRC_147_148_GFAS_AUG2018_20260921/analysis_%j.out",
+        "--error=/cluster/work/climate/mharvey/ModelDevlopment/BrC/runs/validation/BRC_147_148_GFAS_AUG2018_20260921/analysis_%j.err",
+        "/cluster/work/climate/mharvey/ModelDevlopment/BrC/runs/validation/BRC_147_148_GFAS_AUG2018_20260921/run_month_analysis_euler.sh"
+      ],
+      "stderr": "",
+      "wrapper_sha256": "ce007f2fa6a27e7ce0bd73b153910d58f8bafa1ef6ca55fa9d52eb880727d62f",
+      "preflight": "Independent run-steward PASS; only memory request spelling changed,1CPU8GiB retained"
+    }
+  },
+  "resources": {
+    "cpus_per_task": 16,
+    "memory_gib": 96,
+    "legacy_wall_hours": 240,
+    "native_wall_hours": 192
+  },
+  "claim": "Submitted jobs are not completed results.",
+  "submission_attempt_errors": [
+    {
+      "label": "analysis",
+      "stderr": "sbatch: error: lua: Requesting memory by node is not supported. Use --mem-per-cpu.\nsbatch: error: cli_filter plugin terminated with error\n",
+      "stdout": ""
+    }
+  ],
+  "updated_utc": "2026-09-22T10:00:58.638251+00:00"
+}

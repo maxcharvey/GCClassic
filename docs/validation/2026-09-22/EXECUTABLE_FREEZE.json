@@ -1,0 +1,100 @@
+{
+  "status": "EXECUTABLES_FROZEN_NOT_RUN_READY",
+  "utc": "2026-09-21T22:22:52.342779+00:00",
+  "scope": "Only completed executables and build metadata assigned; no restart initialization or model execution",
+  "cases": {
+    "BRC_147_GFAS_FIXED30_L15_20260921": {
+      "executable_sha256": "bae7f81c8ada5130bf63fd2fbe24d355813c0e3a7bfe8458050b54f80e67bcdc",
+      "build_sources": {
+        "GCClassic": {
+          "commit": "390be1fb7c952924d9b3d536d650a1a34ae0d41d",
+          "dirty": false
+        },
+        "geos-chem": {
+          "commit": "64209100986ad45144b3966cbb7899a5e05d431a",
+          "dirty": false
+        },
+        "HEMCO": {
+          "commit": "17d31b993a42d49f8b9044930e6b48eb5c8b3ab5",
+          "dirty": false
+        },
+        "Cloud-J": {
+          "commit": "f33a1b06b79f26ebe3d0eea41990dadc20208391",
+          "dirty": false
+        },
+        "HETP": {
+          "commit": "2a99b24625ed26cf87ae88697ddd6cf8bbdec812",
+          "dirty": false
+        },
+        "KPP": {
+          "commit": "eeee8951f03cc538a3f7a20d4a2a98470db5a021",
+          "dirty": false
+        }
+      },
+      "metadata_sha256": {
+        "CMakeCache.txt": "15c7bfbbe7d3023505bc0a1c3613822368c84ef9c56a786201ecd1f17b9b9b94",
+        "GEOSChemBuildProperties.txt": "f829f81c29e68fdf833c539801e7b39714939f403b729f06c0b9813adf659e1c",
+        "HETPBuildProperties.txt": "dc489255763ead4d2917b8e90da236dc0a917db65e1cf977b94265c52a28811d",
+        "GeosRad.flags.make": "19215ba6b27eec17802c810a93828517e8e0b057af4627ea0c7c11bf81aee9dc",
+        "HEMCOBuildProperties.txt": "ca60416c9f8a41d6e92ac2bb564293da20306e1652741b30cdcbb2674b956e7f",
+        "CloudJBuildProperties.txt": "697080b6283517b71b96205e96ba12a2d74516076253adeca71ddf6e8096df75"
+      },
+      "input_config_sha256": {
+        "geoschem_config.yml": "5da77918b07d110895057b59df6bc3a36314f794904013d8014f82c5339fcc80",
+        "HEMCO_Config.rc": "afebb0e33093d6bd2f8e471cecf6c963496836f12fdc10d50e5532dfed835480",
+        "HEMCO_Diagn.rc": "9b817c339d4f0f5aa0db4c89fe14e4d950633e679d4b7f1b1f653b6cc7c90391",
+        "HISTORY.rc": "26dba0fbb1c8fa5e7d55ad2b1bfff3ec8e9d156aba6bbc71da39d17c5495d908",
+        "species_database.yml": "46f748d389740d1a8be71aa4fefb2dff1f571545e9e76a33f3117c4e0426f47d",
+        "HEMCO_Config.rc.gmao_metfields": "fc087a5065ad62cb648ff9d76be06695baf354c0bdae85e122e4a9da1f1121c0"
+      },
+      "runtime_qualification": "PENDING: missing-species restart choice and separate one-hour preflight/run"
+    },
+    "BRC_148_GFAS_NATIVE3D_20260921": {
+      "executable_sha256": "30377e1d0823f99a1d6a2806a23954ab16eccc7555495076dfe28e510e52ed8d",
+      "build_sources": {
+        "GCClassic": {
+          "commit": "f30a54a0ae95738624ec8f8bd742ad7cbdb18ee8",
+          "ref": "integration/brc-14.8.0",
+          "dirty": false
+        },
+        "geos-chem": {
+          "commit": "b34f550f769d8200cbbe842ad46a2ac9b76d356a",
+          "ref": "integration/brc-14.8.0",
+          "dirty": false
+        },
+        "HEMCO": {
+          "commit": "c06052a2c8d91593ffdf2a383bb47b42bb0ba43f",
+          "ref": "integration/brc-14.8.0",
+          "dirty": false
+        },
+        "Cloud-J": {
+          "commit": "f78dca88e8767f9885e98a2889e89233ddeedf54",
+          "ref": "integration/brc-14.8.0",
+          "dirty": false
+        },
+        "HETP": {
+          "commit": "df2f942853e886c7830bcfd78606f06114cbd7e5",
+          "ref": "GCClassic-14.8.0 pinned gitlink",
+          "dirty": false
+        }
+      },
+      "metadata_sha256": {
+        "CMakeCache.txt": "09226aa43f3b2235dde6596e72aedab0e96a0da360a56d9fac91a2d07346094d",
+        "GEOSChemBuildProperties.txt": "97a23b9aa1e0f8c2cf205919a837747ed3588d1524dc919f374a5fe0794bf25e",
+        "HETPBuildProperties.txt": "5af895bf673056550974cdb9f67999dabf2f62c980202df648f7fc8fb1b52684",
+        "GeosRad.flags.make": "a697501f19159b5f9944230a94870581711ff26b5a556d1a0887ba9f33cb79ae",
+        "HEMCOBuildProperties.txt": "ad3074dcb44beda74514229bc2fd8d3cf7d116703aa168a1cb756f604872bcff",
+        "CloudJBuildProperties.txt": "6068b151b5e6de3fa554b2c2dadf4c1ed1620863c317b32ed47bd7d0c867ca8c"
+      },
+      "input_config_sha256": {
+        "geoschem_config.yml": "c61d17c954d8641086ff104def11015ddce5af8ad50b82e2af7bcac6f9693b6c",
+        "HEMCO_Config.rc": "10d125e4ac204e007b3591d587273b84308814836639bbb9c23ca4a89ab63bad",
+        "HEMCO_Diagn.rc": "b881ef60da2ba3374fa471e8a929b2cdb71440639c42b0a7d52346f740072683",
+        "HISTORY.rc": "26dba0fbb1c8fa5e7d55ad2b1bfff3ec8e9d156aba6bbc71da39d17c5495d908",
+        "species_database.yml": "cd07d9253f6ac82bef5d9387d48bb717231050d0c92781bddf6b090063aad2f1",
+        "HEMCO_Config.rc.gmao_metfields": "c04be424339c53f6a3755a28731627826974383fc9ae029586d65076a10bef0c"
+      },
+      "runtime_qualification": "PENDING: missing-species restart choice and separate one-hour preflight/run"
+    }
+  }
+}

@@ -1,0 +1,180 @@
+{
+  "status": "PASS",
+  "utc": "2026-09-22T11:53:38.641678+00:00",
+  "scope": "Read-only replay of published smoke auditors on accepted pre-publication outputs, not a rebuild/model rerun",
+  "smoke_replay": {
+    "147": {
+      "status": "PASS",
+      "audit_script_sha256": "d105204e9b7699169525aac83c592e9902003e7cb38e281fb9446ee68c3af83c",
+      "configuration_sha256": {
+        "gcclassic": "bae7f81c8ada5130bf63fd2fbe24d355813c0e3a7bfe8458050b54f80e67bcdc",
+        "geoschem_config.yml": "2ba59a4acc400ec956a42c42d915ae6410a43b63e011cc5acfee4c5f21b1f326",
+        "HEMCO_Config.rc": "4481c9183805f7bfbaf34e021e4a7981b71d01372448338d585e1df100d17f43",
+        "HEMCO_Diagn.rc": "bc5e28715efc845ea4a55e2ea79d42eaa75f6dd25881ee9aa7ea024acbe74bff",
+        "HISTORY.rc": "19c41d2ad47b976b39db7f6aa4069f5945416cdc39ca79213445003cce093277",
+        "species_database.yml": "b54d8520add37418f08b94543a8742e94bf508ea6809d2daff0dad9d9ddd21eb",
+        "HEMCO_Config.rc.gmao_metfields": "fc087a5065ad62cb648ff9d76be06695baf354c0bdae85e122e4a9da1f1121c0"
+      },
+      "output_sha256": {
+        "Restarts/GEOSChem.Restart.20180801_0100z.nc4": "9d8252322324735df34852b1965baf37245b84a62c93499ca3101eb8b48e9408",
+        "OutputDir/GEOSChem.SpeciesConc.20180801_0000z.nc4": "1fec38f6b8f2a3714e50f63d3ece5d7f75a9dba9714e001ef28eebc38def4be9",
+        "OutputDir/GEOSChem.Aerosols.20180801_0000z.nc4": "52656f36ff06f01be5f36ce19cecdb3b652593f4f8bf062019b8a8bde0b900bb",
+        "OutputDir/GEOSChem.Budget.20180801_0000z.nc4": "cb7ff10f6e6613238f5f2892a43c78cb9a01ab8c80b85e5cbbbbaaf145a820d4",
+        "OutputDir/GEOSChem.RRTMG.20180801_0000z.nc4": "77106f16761f2064c855991d0f4760fd0cb099ec3f1ddd1561dceddade90739f",
+        "OutputDir/GEOSChem.StateMet.20180801_0000z.nc4": "87cf1cabe7dc37d8e9981fce9b5e77bc411fb17176c185c7da37ed51464be7d8",
+        "OutputDir/GEOSChem.BrCDiagnostics.20180801_0000z.nc4": "b55ae692dbb68dff4c72c2dcefc1b6b96c9e66e9e623c51204fd922186fa138b",
+        "OutputDir/HEMCO_diagnostics.201808010000.nc": "47bbb0fc14133017622791ee4d6acb6b9d023cf301f64128ebb870311494703e",
+        "OutputDir/plane.log.20180801": "253ec22bdb8997aa249f9b4ec819f6f862b22504fafcc830778f7eaed8558e78",
+        "GC.log": "9884ca0236c465d6061280459c812793bbd208dd0a3486b008b53acc27b2e432"
+      }
+    },
+    "148": {
+      "status": "PASS",
+      "audit_script_sha256": "d105204e9b7699169525aac83c592e9902003e7cb38e281fb9446ee68c3af83c",
+      "configuration_sha256": {
+        "gcclassic": "30377e1d0823f99a1d6a2806a23954ab16eccc7555495076dfe28e510e52ed8d",
+        "geoschem_config.yml": "bff4b7c69522d1685d1259595ee4a1bf99260dd542794d54cbb87cbb9f9ddf58",
+        "HEMCO_Config.rc": "b034f8657572b35f88fd226d413f6ce77a00c4a5f06791fa69edc0125646ca17",
+        "HEMCO_Diagn.rc": "b881ef60da2ba3374fa471e8a929b2cdb71440639c42b0a7d52346f740072683",
+        "HISTORY.rc": "19c41d2ad47b976b39db7f6aa4069f5945416cdc39ca79213445003cce093277",
+        "species_database.yml": "19fe018e3be6d10f093ac61048d6bb4ae7129520e654b757652834c0455b5034",
+        "HEMCO_Config.rc.gmao_metfields": "c04be424339c53f6a3755a28731627826974383fc9ae029586d65076a10bef0c"
+      },
+      "output_sha256": {
+        "Restarts/GEOSChem.Restart.20180801_0100z.nc4": "c50d53ca217aaae9780c838d6f3c9a568b7d53c9e33dcb03f8d74226bf935610",
+        "OutputDir/GEOSChem.SpeciesConc.20180801_0000z.nc4": "d25b2a1d957e0ae1cb6ebe0ffbec88868c5a7272ca89a16ab57c3dbdd5121586",
+        "OutputDir/GEOSChem.Aerosols.20180801_0000z.nc4": "55fe36e5e0eb16b6e6d88db660a5d37c65d46a5976fb25b008e173615985d6df",
+        "OutputDir/GEOSChem.Budget.20180801_0000z.nc4": "8dc9acf684b2c93608b8faded9a782607e52a5ef329f6d95e757939171d949fc",
+        "OutputDir/GEOSChem.RRTMG.20180801_0000z.nc4": "a374a92c340a19ec2a4e94395e9100418afe23ce393e557b639f1a77a83a9816",
+        "OutputDir/GEOSChem.StateMet.20180801_0000z.nc4": "1d32c0064504e76656d4bdc5344cee8815926f7a7457fe2e6174cc3a4d1a8fbe",
+        "OutputDir/GEOSChem.BrCDiagnostics.20180801_0000z.nc4": "aa52eabbcae7081cd2ba26e3a3842a75bb910c6bb05415e97655139966dad9d7",
+        "OutputDir/HEMCO_diagnostics.201808010000.nc": "34dd85ec0279ad5219a28016482f1b16de814762a9dcf311f7112826486187fd",
+        "OutputDir/plane.log.20180801": "4388b96a61d5fb12bac8729f6f780bc84a81bc412957295268decb63ccd1826d",
+        "GC.log": "51e1269a8dedb9813a19acd93aa0a05763efa2c5244aec570b16f62a27b405f9"
+      }
+    }
+  },
+  "pair_configuration_replay": {
+    "month": {
+      "status": "PASS",
+      "radiation_wavelength_nm": 550,
+      "radiation_timestep_s": 1200,
+      "allowed_version_differences": {
+        "aerosols.carbon.brc_optics": [
+          "__MISSING__",
+          "organic"
+        ],
+        "aerosols.optics.input_dir": [
+          "/cluster/work/climate/mharvey/ModelDevlopment/BrC/Aerosol_Optics/full_test_v2025-03/",
+          "/cluster/work/climate/GEOS-Chem/ExtData//CHEM_INPUTS/Aerosol_Optics/v2025-03/"
+        ],
+        "operations.photolysis.cloud-j.brc_optics": [
+          "__MISSING__",
+          "organic"
+        ],
+        "operations.photolysis.cloud-j.verbose": [
+          "__MISSING__",
+          false
+        ],
+        "operations.transport.transported_species": "MDL added in14.8; otherwise same ordered list",
+        "simulation.read_restart_as_real8": [
+          true,
+          false
+        ]
+      }
+    },
+    "smoke": {
+      "status": "PASS",
+      "radiation_wavelength_nm": 550,
+      "radiation_timestep_s": 1200,
+      "allowed_version_differences": {
+        "aerosols.carbon.brc_optics": [
+          "__MISSING__",
+          "organic"
+        ],
+        "aerosols.optics.input_dir": [
+          "/cluster/work/climate/mharvey/ModelDevlopment/BrC/Aerosol_Optics/full_test_v2025-03/",
+          "/cluster/work/climate/GEOS-Chem/ExtData//CHEM_INPUTS/Aerosol_Optics/v2025-03/"
+        ],
+        "operations.photolysis.cloud-j.brc_optics": [
+          "__MISSING__",
+          "organic"
+        ],
+        "operations.photolysis.cloud-j.verbose": [
+          "__MISSING__",
+          false
+        ],
+        "operations.transport.transported_species": "MDL added in14.8; otherwise same ordered list",
+        "simulation.read_restart_as_real8": [
+          true,
+          false
+        ]
+      }
+    }
+  },
+  "wrapper_suite": "100 tests passed",
+  "core_background_regression": "PASS",
+  "independent_code_review": "APPROVED after smoke/month guard and shared-symlink fixes",
+  "active_campaign_acceptance_hashes": "Unchanged, verified",
+  "isolated_preparation_replay": {
+    "status": "PASS",
+    "root": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/runs/validation/BRC_PUBLICATION_PREFLIGHT_jel92omc",
+    "preparation": "PREPARED_NOT_RUNTIME_ACCEPTED; no model launched",
+    "preflights": {
+      "147": {
+        "status": "PASS",
+        "case": "BRC_147_GFAS_FIXED30_L15_20260921",
+        "configuration_sha256": {
+          "gcclassic": "bae7f81c8ada5130bf63fd2fbe24d355813c0e3a7bfe8458050b54f80e67bcdc",
+          "geoschem_config.yml": "3f3e4cec5ff5e2e4724aa3784c656d3cff994ab13a70ee52152eb5038bcc1b4a",
+          "HEMCO_Config.rc": "1bbd44367d6cda84a999ac1317d09c1dfa889186cfdee134fe97bfb3140a0ad3",
+          "HEMCO_Diagn.rc": "3be7d54782f2eb806621932787a01621ee4078150a49e6881c84fd9ce203b55d",
+          "HISTORY.rc": "26dba0fbb1c8fa5e7d55ad2b1bfff3ec8e9d156aba6bbc71da39d17c5495d908",
+          "species_database.yml": "b54d8520add37418f08b94543a8742e94bf508ea6809d2daff0dad9d9ddd21eb",
+          "HEMCO_Config.rc.gmao_metfields": "fc087a5065ad62cb648ff9d76be06695baf354c0bdae85e122e4a9da1f1121c0"
+        },
+        "freeze_sha256": "b7e37342eb901df444d6f95bed6ff5884a82847ccc66cc60867f8d45a9cbbc84",
+        "missing_species": [
+          "FFOCPI",
+          "FFOCPO",
+          "PBRCPOA"
+        ],
+        "restart_timestamp": "2018-08-01 00:00:00",
+        "all_present_union_fields_finite": true,
+        "frozen_hashes": "PASS",
+        "cadence": "PASS"
+      },
+      "148_smoke": {
+        "status": "PASS",
+        "case": "BRC_148_GFAS_NATIVE3D_20260921_SMOKE1H_20260922",
+        "configuration_sha256": {
+          "gcclassic": "30377e1d0823f99a1d6a2806a23954ab16eccc7555495076dfe28e510e52ed8d",
+          "geoschem_config.yml": "391716780685b8d7ffa4e311372feda267d32495979736a3f1949be83a9ae6ca",
+          "HEMCO_Config.rc": "b034f8657572b35f88fd226d413f6ce77a00c4a5f06791fa69edc0125646ca17",
+          "HEMCO_Diagn.rc": "70a194fd1b7e9c4dc0b4b691970b217b0d82311cbadcd2e42238d5d7792aef57",
+          "HISTORY.rc": "19c41d2ad47b976b39db7f6aa4069f5945416cdc39ca79213445003cce093277",
+          "species_database.yml": "19fe018e3be6d10f093ac61048d6bb4ae7129520e654b757652834c0455b5034",
+          "HEMCO_Config.rc.gmao_metfields": "c04be424339c53f6a3755a28731627826974383fc9ae029586d65076a10bef0c"
+        },
+        "freeze_sha256": "b7e37342eb901df444d6f95bed6ff5884a82847ccc66cc60867f8d45a9cbbc84",
+        "missing_species": [
+          "FFOCPI",
+          "FFOCPO",
+          "LHMSAQ",
+          "LHMSMP",
+          "MDL",
+          "PBRCPOA",
+          "PHMSAQ",
+          "PHMSMP",
+          "PSO4MP"
+        ],
+        "restart_timestamp": "2018-08-01 00:00:00",
+        "all_present_union_fields_finite": true,
+        "frozen_hashes": "PASS",
+        "cadence": "PASS"
+      }
+    }
+  },
+  "core_publication_commit": "6ad6cc3a7b0d54fb899cfcc5ddee74bea1e45f85",
+  "final_targeted_suite": "14 tests passed after final guard changes"
+}

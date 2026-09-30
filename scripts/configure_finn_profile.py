@@ -13,10 +13,12 @@ METHOD = 'gfas_uniform'
 
 
 def configure(text, template, auxiliary, legacy=False):
-    def set_option(key, value):
+    def set_option(key, value, required=True):
         nonlocal text
         pattern = rf'^(\s*-->\s*{re.escape(key)}\s*:\s*)\S+'
         text, count = re.subn(pattern, lambda m: m[1]+value, text, flags=re.M)
+        if count == 0 and not required:
+            return
         if count != 1:
             raise ValueError(f'Expected one option {key}, found {count}')
     for name in ('GFED', 'GFAS', 'FINNv25_Inject'):
@@ -29,7 +31,7 @@ def configure(text, template, auxiliary, legacy=False):
         if count != 1:
             raise ValueError(f'Expected one extension {name}, found {count}')
     set_option('QFED2', 'false')
-    set_option('QFED2_BRC_HARMONIZED_SENSITIVITY', 'false')
+    set_option('QFED2_BRC_HARMONIZED_SENSITIVITY', 'false', required=False)
     set_option('GFAS_BRC_HARMONIZED_SENSITIVITY', 'false')
     set_option('FINNv25', 'true')
     set_option('FINNV25_BRC_HARMONIZED_SENSITIVITY', 'true')

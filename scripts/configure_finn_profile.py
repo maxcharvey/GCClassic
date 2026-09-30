@@ -59,6 +59,11 @@ def configure(text, template, auxiliary, legacy=False):
     aux=tail[:tail.index(')))FINNv25_Inject\n')+len(')))FINNv25_Inject\n')]
     if auxiliary:
         aux=re.sub(r'\$ROOT/FINN_GFAS_AUX/\$YYYY/GFAS-height-moments-\$YYYY\$MM\$DD.nc',lambda m:auxiliary,aux)
+    # Config_ReadCont uses a 255-character buffer before stripping comments.
+    # Reject oversized auxiliary rows before writing a run's configuration.
+    for line in aux.splitlines():
+        if len(line.rstrip()) > 255:
+            raise ValueError('Auxiliary row exceeds HEMCO 255-character limit; use a short run-local input symlink')
     pos=text.index(end)+len(end)
     return text[:pos]+'\n'+aux+text[pos:]
 

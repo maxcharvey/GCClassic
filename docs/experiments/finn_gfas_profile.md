@@ -13,3 +13,5 @@ Manual two-dimensional HEMCO metrics, all kg/m2/s and per configured species, ar
 This is model-grid profile transfer, not individual fire matching. FINN uses local fire dates whereas GFAS daily means use UTC days; same-date matching is a stated approximation. Assess adjacent GFAS-day offsets before physical validation (stage shifted auxiliary files labelled with the model date and retain both dates in metadata). Prepared profiles inherit preprocessing and possible forest corrections; comparing them with unscaled height reconstructions changes more than distribution shape.
 
 Build with the established GNU12 Release/fullchem/OpenMP/RRTMG-off configuration. `tests/finn_profile/run.sh ABSOLUTE_BUILD_DIR` compiles strict pure-kernel tests. Run it and full-model validation inside a compute allocation. Unit/source closure does not establish transport conservation or observational realism. The prior FT-retention transport issue is independent.
+
+HEMCO limits base-emission rows to 255 characters before comment removal. Use short run-local symlinks for long FINN and auxiliary input paths; the configuration helper rejects auxiliary rows that exceed this limit.

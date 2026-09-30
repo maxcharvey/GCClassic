@@ -27,4 +27,8 @@ class ConfigTests(unittest.TestCase):
   old=re.sub(r'^.*--> QFED2_BRC_HARMONIZED_SENSITIVITY[^\n]*\n','',t,flags=re.M)
   out=m.configure(old,t,'/tmp/aux.nc')
   self.assertRegex(out,r'GFAS_BRC_HARMONIZED_SENSITIVITY\s*:\s*false')
+ def test_long_auxiliary_path_rejected(self):
+  t=(m.ROOT/'src/GEOS-Chem/run/GCClassic/HEMCO_Config.rc.templates/HEMCO_Config.rc.fullchem').read_text()
+  with self.assertRaisesRegex(ValueError,'255-character limit'):
+   m.configure(t,t,'/tmp/'+('x'*260)+'.nc')
 if __name__=='__main__':unittest.main()

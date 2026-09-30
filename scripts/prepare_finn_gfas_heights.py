@@ -14,7 +14,9 @@ import netCDF4 as nc
 import numpy as np
 
 
-def moments(co, mami, apt):
+def moments(co, mami, apt, invalid_height_policy="error"):
+    if invalid_height_policy not in ("error","exclude"):
+        raise ValueError("Invalid height policy")
     co,mami,apt=map(np.ma.asarray,(co,mami,apt))
     if co.shape!=mami.shape or co.shape!=apt.shape:
         raise ValueError('CO and height dimensions differ')
@@ -27,8 +29,10 @@ def moments(co, mami, apt):
     if np.any((~hm)&(~np.isfinite(m))) or np.any((~ht)&(~np.isfinite(t))):
         raise ValueError('Unrecognized nonfinite height; declare missing values in source')
     valid=(c>0)&(~hm)&(~ht)
-    if np.any(valid&(t<m)):
+    rejected=valid&(t<m)
+    if np.any(rejected) and invalid_height_policy=='error':
         raise ValueError('Positive supported GFAS cell has APT < MAMI')
+    valid=valid&~rejected
     support=np.where(valid,c,0)
     mnum=np.zeros_like(c);tnum=np.zeros_like(c)
     mnum[valid]=c[valid]*m[valid]
@@ -36,7 +40,8 @@ def moments(co, mami, apt):
     if np.any(~np.isfinite(mnum)) or np.any(~np.isfinite(tnum)):
         raise ValueError('Height moment overflow')
     return dict(total_co_support=c,valid_co_support=support,
-                mami_co_moment=mnum,apt_co_moment=tnum)
+                mami_co_moment=mnum,apt_co_moment=tnum,
+                rejected_co_support=np.where(rejected,c,0))
 
 
 def digest(path):
@@ -46,7 +51,7 @@ def digest(path):
     return h.hexdigest()
 
 
-def prepare(source, output, target_date=None):
+def prepare(source, output, target_date=None, invalid_height_policy="error"):
     for reserved in (output,output.with_suffix('.json'),output.with_suffix(output.suffix+'.tmp')):
         if reserved.exists():raise ValueError(f'Refusing to overwrite {reserved}')
     with nc.Dataset(source) as ds:
@@ -77,11 +82,25 @@ def prepare(source, output, target_date=None):
                 raise ValueError(f'{label} must be regular')
         if not (-90<=lat.min()<lat.max()<=90 and -180<=lon.min()<lon.max()<=180):
             raise ValueError('Expected canonical GFAS latitude/longitude convention')
-        data=moments(ds['cofire'][:],ds['mami'][:],ds['apt'][:])
+        data=moments(ds['cofire'][:],ds['mami'][:],ds['apt'][:],invalid_height_policy)
     output.parent.mkdir(parents=True,exist_ok=True)
+    area=np.cos(np.deg2rad(lat))[None,:,None]
+    total=float(np.sum(data['total_co_support']*area))
+    excluded=float(np.sum(data['rejected_co_support']*area))
+    bad_indices=np.argwhere(data['rejected_co_support'][0]>0)
+    spatial_bins={}
+    for i,j in bad_indices:
+        key=f'lat20deg_bin_{int(np.floor(lat[i]/20))}_lon30deg_bin_{int(np.floor(lon[j]/30))}'
+        entry=spatial_bins.setdefault(key,{'cells':0,'global_CO_area_fraction':0.0})
+        entry['cells']+=1
+        entry['global_CO_area_fraction']+=float(data['rejected_co_support'][0,i,j]*area[0,i,0]/total)
     meta={'source_path':str(source.resolve()),'source_sha256':digest(source),'source_utc_date':source_date,
           'model_date':day.strftime('%Y-%m-%d'),'gfas_source_minus_model_days':offset,
           'height_datum':'MSL','support_reference':'1 kg m-2 s-1',
+          'invalid_height_policy':invalid_height_policy,
+          'reversed_pair_cells':int(len(bad_indices)),
+          'reversed_pair_CO_area_fraction':excluded/total if total>0 else 0.0,
+          'reversed_pair_spatial_bins':spatial_bins,
           'missing_policy':'recognized masked heights remove joint height support; FINN mass never altered',
           'positive_native_cells':int(np.count_nonzero(data['total_co_support'])),
           'height_supported_cells':int(np.count_nonzero(data['valid_co_support'])),
@@ -98,6 +117,7 @@ def prepare(source, output, target_date=None):
                 v=out.createVariable(name,'f8',('time','lat','lon'),zlib=True,complevel=4,fill_value=False)
                 v[:]=values;v.units='m' if 'moment' in name else '1'
             out.height_datum='MSL'
+            out.invalid_height_policy=invalid_height_policy
             out.source_utc_date=source_date
             out.model_date=meta['model_date']
             out.gfas_source_minus_model_days=offset
@@ -114,5 +134,7 @@ def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('source',type=Path);ap.add_argument('output',type=Path)
     ap.add_argument('--target-date',help='YYYY-MM-DD; explicit same/adjacent model date')
-    a=ap.parse_args();print(json.dumps(prepare(a.source,a.output,a.target_date),indent=2))
+    ap.add_argument('--invalid-height-policy',choices=('error','exclude'),default='error',
+                    help='Explicit sensitivity: exclude finite reversed height pairs from support; retain total CO')
+    a=ap.parse_args();print(json.dumps(prepare(a.source,a.output,a.target_date,a.invalid_height_policy),indent=2))
 if __name__=='__main__':main()

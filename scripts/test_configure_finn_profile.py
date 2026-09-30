@@ -22,4 +22,9 @@ class ConfigTests(unittest.TestCase):
      aux=[x for x in out.splitlines() if x.startswith('165 FINNV25_GFAS_')]
      self.assertEqual(len(aux),1 if m.METHOD=='gfas_prepared' else 4)
      self.assertTrue(all('/tmp/aux.nc' in x for x in aux))
+ def test_historical_config_without_qfed_proxy_option(self):
+  t=(m.ROOT/'src/GEOS-Chem/run/GCClassic/HEMCO_Config.rc.templates/HEMCO_Config.rc.fullchem').read_text()
+  old=re.sub(r'^.*--> QFED2_BRC_HARMONIZED_SENSITIVITY[^\n]*\n','',t,flags=re.M)
+  out=m.configure(old,t,'/tmp/aux.nc')
+  self.assertRegex(out,r'GFAS_BRC_HARMONIZED_SENSITIVITY\s*:\s*false')
 if __name__=='__main__':unittest.main()

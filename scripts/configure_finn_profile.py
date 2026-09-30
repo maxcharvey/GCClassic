@@ -37,9 +37,11 @@ def configure(text, template, auxiliary, legacy=False):
     text = text[:a]+template[ta:tb]+text[b:]
     for key in ('FINNV25_GFAS_PROFILE','FINNv25_profile_fallback','FINNv25_profile_datum'):
         text = re.sub(rf'^\s*-->\s*{key}\s*:[^\n]*\n', '', text, flags=re.M)
-    # This utility is deliberately single-use per fresh staged run.
-    if '165 FINNV25_GFAS_REFERENCE ' in text or '165 FINNV25_GFAS_SUPPORT ' in text:
-        raise ValueError('Auxiliary rows already installed; start from the saved backup')
+    # Replace the one known auxiliary block from a fresh branch-generated run.
+    aux_pattern = r'# Auxiliary shape only:[^\n]*\n\(\(\(FINNv25_Inject\n\(\(\(FINNV25_GFAS_PROFILE\n.*?\)\)\)FINNV25_GFAS_PROFILE\n\)\)\)FINNv25_Inject\n'
+    text, count = re.subn(aux_pattern, '', text, flags=re.S)
+    if count > 1 or '165 FINNV25_GFAS_REFERENCE ' in text or '165 FINNV25_GFAS_SUPPORT ' in text:
+        raise ValueError('Unrecognized or duplicate existing auxiliary rows')
     set_option('FINNv25_vertical_injection_fraction', '0.0')
     set_option('FINNv25_vertical_injection_levels', '0')
     anchor = re.search(r'^.*-->\s*FINNv25_vertical_injection_levels\s*:[^\n]*\n',text,re.M)

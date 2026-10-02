@@ -147,6 +147,101 @@ The pinned fire extension and chemistry paths therefore require code changes.
   after each underlying injection branch is independently qualified.
 - Preregister numerical tolerances and efficiency definitions before longer runs.
 
-The current branch implements diagnostics and documents this cascade. It does
-not yet provide chemically evolving country tags, first-passage export efficiency,
-or a scientifically validated Arctic attribution result.
+The accepted diagnostic work enables parent deposition collections. The origin
+prototype described below is experimental: it does not provide first-passage
+export efficiency or a scientifically validated Arctic attribution result.
+
+### Experimental origin implementation and transport capture
+
+The working branch also contains an opt-in engineering prototype: four origins
+(USA, CAN, ROW, UNT) for each of the seven parents. UNT receives the existing
+restart burden and emissions outside the selected FINNv25 fire cohort. Conversion
+hooks partition the actual parent reaction increment, including its carbon-basis
+factor; tags clone parent deposition properties. Country inputs partition the
+native FINN grid by cell centres using pinned Natural Earth 1:50 million polygons.
+This geographic approximation and the transport method remain unqualified.
+
+The single-origin (all UNT) short test reproduces parent restart, dry deposition,
+and wet loss. Initial country configurations failed strict parent invariance
+because they split an inherited HEMCO source chain; see the safeguard below.
+Separate species transport also produces material local origin-sum residuals.
+Transport accuracy remains a failed acceptance gate. Do not use this prototype
+to report country export or Arctic deposition efficiency.
+
+For a bounded offline transport investigation, set
+`BRC_PARENT_FLUX_CAPTURE_DIR` to an existing empty directory and optionally
+`BRC_PARENT_FLUX_CAPTURE_STEPS` to an integer from 1 through 6 (default 1).
+Without the directory variable, capture is disabled. Existing output files cause
+an error. This hook observes parents and never changes their state or fluxes.
+
+Each `flux_<parent>_stepNNNNNN.bin` is an unformatted stream in the build's
+native conversion order. The schema starts with two eight-byte ASCII fields
+(`BRCFX001`, blank-padded parent name), followed by sixteen int32 values:
+version, NX, NY, NZ, step, state-unit code, fp byte width, J1P, J2P, FILL,
+origin count (0 or 4), endian marker `0x01020304`, IORD, JORD, KORD, CROSS.
+Floating payload is Fortran column-major in the recorded fp width:
+
+1. DT, AREA(NY), GEO(NY), GEO_PC;
+2. parent before polar averaging; optional USA/CAN/ROW/UNT prestates;
+3. parent after polar averaging, DP1, DP2, CX, CY, WZ;
+4. for each vertical level, DQ after X then DQ after Y;
+5. predictor Q before Z, DQ after Z, DQ after cleanup, final Q;
+6. FX(NX,NY,NZ), FY(NX,NY+1,NZ), FZ(NX,NY,NZ).
+
+All unspecified arrays have shape NX,NY,NZ with the model's transport vertical
+order. `audit_brc_parent_flux.c` reads either endian and fp4/fp8, reconstructs
+parent divergence and final pressure division, and reports cleanup separately.
+Its independently reset uniform/checkerboard donor probes test algebraic
+feasibility at each parent stage; they are not sequential origin trajectories or
+a reconstruction of the native limiter. No clipping or renormalization occurs.
+Inventories in this capture use pressure times area, not kilograms.
+`make_brc_flux_fixture.c` supplies synthetic serialization/divergence fixtures,
+including a periodic circulating flux whose checkerboard donor allocation
+creates negative origins despite a positive unchanged parent. It does not test
+native flux generation or meteorological consistency.
+
+The first native control capture (two 600 s transport calls) passes every raw
+parent replay gate. It also rejects the naive donor method: DBRCPOA has positive
+parent stages but its X checkerboard probe creates negative origin cells.
+BRCSOA has transient negative native X/Y/Z cells before `Qckxyz`; even constant
+origin fractions inherit those intermediate negatives. Thus a method requiring
+positive parent inventories at every raw stage cannot simply be inserted here.
+Cleanup must have an explicit origin-consistent accounting treatment.
+
+`test_brc_implicit_partition.c` is a separate toy experiment. It checks a dense
+implicit mixing solve against linear residuals, per-origin inventory conservation,
+face closure and singular zero-stock circulation refusal. Its periodic and
+throughflow counterexamples expose spatial mixing and multi-face propagation;
+Fourier timestep refinement distinguishes convergence to a discrete upwind
+operator from accurate continuum advection. Passing these algebra tests does not
+qualify this method for the captured native stages or live model integration.
+
+The regional engineering integrator uses model cell-centre latitude >=66.5° for
+its Arctic selection. This includes northern USA/Canada: deposition there is not
+necessarily export across a national boundary. It does not compute fractional
+receptor-cell overlap, gross scavenging, first passage, or a complete surface
+precipitation ledger. The signed wet-loss integral is a net atmospheric process
+loss and preserves re-evaporation/resuspension gains.
+
+`audit_brc_origin_carbon.pl GC.log SIGNED_NET_LOSS.csv 1.8` sums parent and origin
+families on the model's carbon-equivalent basis (FSOAP and FSOAS divided by 1.8).
+Its weighted sum of species L1 discrepancies is explicitly an upper bound on the
+family discrepancy, not the actual L1 of a summed cell field. The denominator
+is the selected FINN USA+CAN+ROW emitted carbon over the CSV's verified interval.
+The bound includes UNT/background and ignores species cancellations; it is not
+an individual-country attribution error or a deposition efficiency.
+
+### Configuration inheritance safeguard
+
+HEMCO source fields with a `-` filename inherit the immediately preceding source
+record. Native FINN SOAP inherits CO. Country fields therefore follow the final
+explicit FINN MACR record, immediately before `)))FINNv25_Inject`; inserting them
+between CO and SOAP changes physical SOAP emissions. The configuration regression
+asserts this inheritance chain as well as the terminal tag insertion. Preserved
+failed-case emissions showed SOAP as the only changed physical fire diagnostic;
+corrected input-only, active surface-tag and active elevated-tag reruns reproduce
+all 416 parent restart fields and all 49 common HEMCO numeric fields exactly
+against their matched controls. The elevated test injects 35% of selected fire
+emissions into two pressure-weighted layers above the PBL. These one-hour gates
+establish physical-parent invariance; they do not resolve the separate failed
+origin-transport closure gate. Individual results remain in the run evidence.

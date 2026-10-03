@@ -112,14 +112,21 @@ int main(int argc,char **argv){
    fprintf(stderr,"PROBE file=%s step=%d lat=%d parent=%s shared_mask_raw_L1_kg=%.17g shared_factor_actual_parent_L1_kg=%.17g shared_factor_unclipped_parent_L1_kg=%.17g parent_clipping_L1_kg=%.17g parent_clipping_signed_kg=%.17g bottom_tendency_L1_kg=%.17g ENGINEERING_ONLY\n",argv[a],step,lat,names[s],rawl1,finall1,noclipl1,clipmass,clipsigned,botl1);
    for(int o=1;o<5;o++){
     long negatives=0,scaled_negatives=0;double min=0,scaled_min=0,negative_mass=0,scaled_negative_mass=0;
+    double target_signed=0,target_l1=0,target_max=0;
     for(int k=0;k<nz;k++)for(int i=0;i<nx;i++){
      size_t v=(size_t)k*nx+i,pc=(size_t)b*nx+i;double value=counter[(size_t)(b+o)*cell+v],factor=(k>=top&&safe[pc])?num[pc]/den[pc]:1;
      if(value<0){negatives++;if(value<min)min=value;negative_mass+=value*ad[v];}
      double scaled=value*factor;if(!isfinite(scaled))fail("nonfinite scaled counterfactual");
      if(scaled<0){scaled_negatives++;if(scaled<scaled_min)scaled_min=scaled;scaled_negative_mass+=scaled*ad[v];}
     }
-    if(!isfinite(negative_mass)||!isfinite(scaled_negative_mass))fail("nonfinite counterfactual negative inventory");
-    fprintf(stderr,"PROBE_ORIGIN file=%s step=%d lat=%d parent=%s origin=%d negative_raw_cells=%ld minimum_raw_kgkg=%.17g negative_raw_kg=%.17g negative_shared_factor_cells=%ld minimum_shared_factor_kgkg=%.17g negative_shared_factor_kg=%.17g ENGINEERING_ONLY_SIGNED\n",argv[a],step,lat,names[s],o,negatives,min,negative_mass,scaled_negatives,scaled_min,scaled_negative_mass);
+    for(int i=0;i<nx;i++){
+     size_t pc=(size_t)b*nx+i,oc=(size_t)(b+o)*nx+i;double factor=safe[pc]?num[pc]/den[pc]:1,mass=0;
+     for(int k=top;k<nz;k++){size_t v=(size_t)k*nx+i;mass+=counter[(size_t)(b+o)*cell+v]*factor*ad[v];}
+     double residual=mass-num[oc];if(!isfinite(residual))fail("nonfinite counterfactual origin target residual");
+     target_signed+=residual;target_l1+=fabs(residual);if(fabs(residual)>target_max)target_max=fabs(residual);
+    }
+    if(!isfinite(negative_mass)||!isfinite(scaled_negative_mass)||!isfinite(target_signed)||!isfinite(target_l1)||!isfinite(target_max))fail("nonfinite counterfactual negative inventory or target");
+    fprintf(stderr,"PROBE_ORIGIN file=%s step=%d lat=%d parent=%s origin=%d negative_raw_cells=%ld minimum_raw_kgkg=%.17g negative_raw_kg=%.17g negative_shared_factor_cells=%ld minimum_shared_factor_kgkg=%.17g negative_shared_factor_kg=%.17g target_signed_error_kg=%.17g target_column_L1_error_kg=%.17g target_max_column_error_kg=%.17g ENGINEERING_ONLY_SIGNED\n",argv[a],step,lat,names[s],o,negatives,min,negative_mass,scaled_negatives,scaled_min,scaled_negative_mass,target_signed,target_l1,target_max);
    }
    for(int p=0;p<6;p++){
     double mass=0,signedr=0,l1=0,max=0;long negative[5]={0};

@@ -26,6 +26,11 @@ without deposition flags; do not invent deposition outputs for it.
 | BrCWetLoss | WetLossConv, WetLossConvFrac, WetLossLS for six aerosols (18) | kg s-1, dimensionless, kg s-1 |
 | BrCProcessBudget | Full-column emissions/dry deposition, chemistry, transport, mixing, convection for seven species; wet deposition for six (41) | kg s-1 |
 
+`WetLossConvFrac` is the native convective scavenging coefficient. Property-
+identical parent and origin species share it, including origins with zero mass.
+It is not a country mass fraction and must not be summed across origins. Use
+the signed mass-rate fields for tagged wet-loss accounting.
+
 `BudgetEmisDryDepFull` combines emissions and dry deposition and cannot be
 interpreted as a separate deposition sink. Budget names refer to native operator
 stages: in the tested Classic case the emissions/dry-deposition increments appear
@@ -296,11 +301,36 @@ An explicitly signed offline probe shares only the parent's rollback mask and
 restoration factor across the components, omitting component clipping. It
 compares against actual final parent and parent with clipping omitted, reports
 parent clipping mass, bottom-tendency closure, and negative component inventories.
+It also compares each signed component inventory over the native restoration
+range with that origin's captured restoration numerator, reporting signed,
+columnwise L1 and maximum errors. In the first surface FSOAP step, the signed
+target errors are approximately -162.954 kg USA, -78.140 kg CAN, -47.760 kg ROW
+and +288.854 kg UNT, despite a total cellwise discrepancy of only 0.000469 kg.
+The tested shared decisions therefore fail both country positivity and individual
+mass targets. These are diagnostics of this literal probe, not a proof that every
+coupled origin method is infeasible.
 It tests algebraic feasibility and does not qualify an origin repair. The run
 receipt must separately require the complete two-step, 91-latitude matrix of
 182 streams, each with six complete phases, and exact physical invariance for
 capture-OFF versus reference and capture-ON versus OFF. Numeric replay tolerances
 are 5e-12 for fp8 and 5e-5 for fp4, without a scientific accuracy threshold.
+
+The surface and elevated capture pairs both pass all 444 restart variables,
+61 HEMCO numeric fields and seven HISTORY collections exactly between ON and
+OFF. Each of the 182 latitude streams per scenario replays all 35 native
+diffusion solutions exactly. First-step FSOAP L1 grows at tracer-specific
+countergradient rollback from 0.000479 to 11,503.818 kg at the surface, and
+from 0.000283 to 30,660.849 kg in the elevated fixture. Native restoration
+leaves 8,647.537 and 21,949.433 kg respectively. Post-diffusion clipping changes
+neither first-step result. These two bounded observations identify the same
+first large PBL partition error; they do not rank injection benefits or resolve
+the independently failing advection allocation probes.
+
+`summarize_brc_mixing_capture.pl REPLAY.csv REPLAY.txt` checks the complete
+two-step matrix and reduces disjoint latitude inventories into 84 phase rows
+and 70 parent/origin probe rows. Cellwise L1 is summed; maxima use the maximum,
+and signed residuals remain separate. Target diagnostics must be complete when
+present. Existing summaries without target diagnostics remain readable.
 
 ### Native process-budget QA
 
@@ -312,8 +342,27 @@ the combined mixing plus emissions/dry-deposition increment and explicit zero
 FSOAP wet deposition. Budget rates are integrated with interval duration, never
 area. Uninstrumented interstep mass changes remain separately unassigned.
 
-The corrected hourly surface and elevated tests pass every comparison. The
-roundoff QA bound combines 5e-7 of the cellwise absolute CDF integral, 5e-13 of
+The corrected hourly surface and elevated tests pass every comparison. Full-day
+surface, elevated and all-UNT tests also pass all 175 comparisons per case
+(525 total), against 205 native budget fields per case. Independent text audits
+reconstruct every logged increment. The maximum differences are 0.245, 0.171
+and 0.245 kg respectively, below the fixed numeric bounds; unassigned interstep
+increments remain explicitly reported. These checks verify native bookkeeping
+while preserving the failed country-additivity result.
+
+The all-UNT full-day case additionally reproduces the matched parent exactly in
+416 physical restart variables, 49 common HEMCO fields and three parent HISTORY
+collections. Its 21 country restart fields and 12 country emission fields are
+exactly zero. UNT reproduces all seven parent restart species to relative error
+at most 6.18e-15, and all 48 tagged dry and 48 signed wet mass-loss fields match
+their parent equivalents exactly. This isolates nontrivial source partitions as
+necessary tests: the all-UNT pass does not qualify country transport.
+An extended wet audit checks all 72 fields exactly: the 48 signed loss fields
+above and 24 convective coefficients. Each coefficient has units `1`, lies in
+the native interval [0,1], and equals its physical parent's coefficient even
+for empty country tracers.
+
+The roundoff QA bound combines 5e-7 of the cellwise absolute CDF integral, 5e-13 of
 the logged inventory-pair scale, and 1e-10 kg; it was fixed before integration.
 It is a bookkeeping check, without a country accuracy acceptance criterion.
 The reader checks units, coordinates, averaging attributes and run span; frozen

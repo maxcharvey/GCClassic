@@ -3,19 +3,51 @@
 This is an offline design specification, not an implemented transport scheme.
 The v14.8 origin prototype independently transports four registered species per
 physical BrC parent. Its country-source and process bookkeeping can be tested,
-but aggregate operator closure has failed. PBL mixing is the first failure in
+but aggregate operator closure has failed. PBL mixing is the first large failure in
 the corrected country fixture, before the second advection call; both mixing
 and advection require a qualified treatment. Initial country configurations also
 failed parent invariance because a tag insertion split HEMCO's CO/SOAP source
-inheritance chain. Corrected one-hour and surface full-day configurations pass
-strict parent invariance; scenario-specific receipts remain required.
+inheritance chain. Corrected one-hour and full-day configurations pass
+strict parent invariance for both injection scenarios; scenario-specific receipts
+remain required.
 No export or deposition efficiency is accepted.
+
+## Contract before a live coupled repair
+
+The native parent remains the physical reference. Preserve its concentrations,
+emissions, injection, aerosol participation and operator decisions. A diagnostic
+must pass matched capture-OFF/reference and capture-ON/OFF comparisons before its
+evidence is used. A candidate origin scheme then has separate acceptance gates:
+
+- Finite, nonnegative final USA/CAN/ROW/UNT inventories and cellwise additivity
+  to the frozen parent. Report signed, L1 and maximum residuals separately.
+- Each origin's mass target derived from actual incoming inventory, native
+  source/sink forcing and documented restoration or cleanup accounting. Test
+  whether all targets are compatible with the frozen parent; record infeasibility
+  rather than silently changing targets or assigning created mass a country.
+- Spatial fidelity for plume position, vertical displacement, PBL exchange and
+  country-boundary transfer, using nontrivial partitions and the frozen failing
+  cases. Conservation alone does not establish geographic accuracy.
+- Explicit treatment of signed countergradient/advection intermediates, rollback
+  masks, safe-division branches and Qck corrections. Signed replay is diagnostic;
+  it does not satisfy the final-origin positivity gate.
+- Explicit refusal or reviewed treatment for empty donors, zero support,
+  singular systems and incompatible constraints. Inventory and documented forcing
+  must supply any claimed provenance.
+
+Preregister numeric and scientific acceptance criteria before testing a live
+candidate. Cell clipping followed by rescaling to the parent, silent origin
+transfers, relaxed thresholds and unreviewed fallbacks are excluded. Any proposed
+allocation of native corrections requires its own conservation, provenance and
+spatial tests. PBL mixing and advection must both qualify before country metrics
+are accepted; solving the first observed failure is insufficient.
 
 ## Evidence and impossible combination
 
 The first surface PBL-mixing call produces species L1 discrepancies of about
 8,648 kg FSOAP, 13,551 kg NPBRCPOA, 35,623 kg PBRCPOA and 112,341 kg DBRCPOA
-despite exact source partitioning. Native VDIFF independently rolls back a
+despite source partition closure within numerical roundoff. Native VDIFF
+independently rolls back a
 tracer's countergradient column when it violates its threshold, clips negative
 post-diffusion cells, and restores each tracer's column mass. These operations
 need not act identically on a parent and its components. The opt-in six-phase

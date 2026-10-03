@@ -11,18 +11,35 @@ static void bytes(FILE *f,const void *p,size_t n){if(fwrite(p,1,n,f)!=n)exit(2);
 static void real(FILE *f,double v,int width,int swap){if(width==8){uint64_t n;memcpy(&n,&v,8);if(swap)n=rev64(n);bytes(f,&n,8);}else{float v4=v;uint32_t n;memcpy(&n,&v4,4);if(swap)n=rev32(n);bytes(f,&n,4);}}
 static void field(FILE *f,const double *v,size_t n,int w,int s){for(size_t i=0;i<n;i++)real(f,v[i],w,s);}
 int main(int argc,char **argv){
- if(argc!=2)return 2;uint32_t host=1;int hostLittle=*(unsigned char*)&host;const int nx=2,ny=6,nz=3,n=36;
- double q[36],p[36],cx[36],zero[42]={0},fx[36],z[36],final[36],fz[36];
+ if(argc!=2&&argc!=3)return 2;
+ int cleanup=argc==3;if(cleanup&&strcmp(argv[2],"cleanup"))return 2;
+ uint32_t host=1;int hostLittle=*(unsigned char*)&host;const int nx=2,ny=6,nz=3,n=36;
+ double q[36],p[36],cx[36],zero[42]={0},fx[36],z[36],clean[36],density[36],final[36],fz[36];
  for(int k=0;k<nz;k++)for(int j=0;j<ny;j++)for(int i=0;i<nx;i++){int a=(k*ny+j)*nx+i;q[a]=1;p[a]=10;cx[a]=(j>=2&&j<=3)?2:0;fx[a]=(j>=2&&j<=3)?20:0;fz[a]=k==1?1:k==2?0.2:0;z[a]=k==0?9:k==1?10.8:10.2;final[a]=z[a]/10;}
+ for(int a=0;a<n;a++){clean[a]=z[a];density[a]=p[a];}
+ if(cleanup){
+  /* Independent hand-calculated columns: top transfer, middle transfer,
+     bottom inventory creation, cascading deficit. Polar negatives untouched. */
+  const double input[4][3]={{-2,5,4},{1,-3,4},{1,1,-3},{-2,1,-1}};
+  const double expected[4][3]={{0,3,4},{0,0,2},{1,0,0},{0,0,0}};
+  for(int k=0;k<nz;k++)for(int j=0;j<ny;j++)for(int i=0;i<nx;i++){
+   int a=(k*ny+j)*nx+i,c=(j-2)*2+i;double v=1,answer=1;
+   if(j>=2&&j<=3){v=input[c][k];answer=expected[c][k];}
+   if(j<2&&k==0){v=-2;answer=-2;}
+   q[a]=v/10;density[a]=z[a]=v;clean[a]=answer;cx[a]=fx[a]=fz[a]=0;
+   final[a]=answer<0?1e-26:answer/10;
+  }
+ }
  for(int big=0;big<2;big++)for(int w=4;w<=8;w+=4){
-  int swap=big==hostLittle;char path[1024];snprintf(path,sizeof(path),"%s/fixture_%s_fp%d.bin",argv[1],big?"be":"le",w);FILE *f=fopen(path,"wbx");if(!f)return 1;
+  int swap=big==hostLittle;char path[1024];snprintf(path,sizeof(path),"%s/%s_%s_fp%d.bin",argv[1],cleanup?"cleanup":"fixture",big?"be":"le",w);FILE *f=fopen(path,"wbx");if(!f)return 1;
   bytes(f,"BRCFX001",8);bytes(f,"FSOAP   ",8);uint32_t h[]={1,nx,ny,nz,1,2,w,3,4,1,4,0x01020304,3,3,7,1};for(int i=0;i<16;i++){uint32_t v=swap?rev32(h[i]):h[i];bytes(f,&v,4);}
   real(f,600,w,swap);for(int i=0;i<ny;i++)real(f,1,w,swap);for(int i=0;i<ny;i++)real(f,1,w,swap);real(f,0.5,w,swap);field(f,q,n,w,swap);
   for(int o=0;o<4;o++){double origin[36];for(int i=0;i<n;i++)origin[i]=q[i]*(o+1)*0.1;field(f,origin,n,w,swap);}
   field(f,q,n,w,swap);field(f,p,n,w,swap);field(f,p,n,w,swap);field(f,cx,n,w,swap);field(f,zero,n,w,swap);field(f,zero,n,w,swap);
-  for(int k=0;k<nz;k++){field(f,p+k*nx*ny,nx*ny,w,swap);field(f,p+k*nx*ny,nx*ny,w,swap);}
-  field(f,q,n,w,swap);field(f,z,n,w,swap);field(f,z,n,w,swap);field(f,final,n,w,swap);field(f,fx,n,w,swap);field(f,zero,nx*(ny+1)*nz,w,swap);field(f,fz,n,w,swap);
-  if(fclose(f))return 2;puts(path);
+  for(int k=0;k<nz;k++){field(f,density+k*nx*ny,nx*ny,w,swap);field(f,density+k*nx*ny,nx*ny,w,swap);}
+  field(f,q,n,w,swap);field(f,z,n,w,swap);field(f,clean,n,w,swap);field(f,final,n,w,swap);field(f,fx,n,w,swap);field(f,zero,nx*(ny+1)*nz,w,swap);field(f,fz,n,w,swap);
+  if(fclose(f))return 2;
+  puts(path);
  }
  return 0;
 }

@@ -3,12 +3,25 @@
 This is an offline design specification, not an implemented transport scheme.
 The v14.8 origin prototype independently transports four registered species per
 physical BrC parent. Its country-source and process bookkeeping can be tested,
-but aggregate transport closure has failed. Initial country configurations also
+but aggregate operator closure has failed. PBL mixing is the first failure in
+the corrected country fixture, before the second advection call; both mixing
+and advection require a qualified treatment. Initial country configurations also
 failed parent invariance because a tag insertion split HEMCO's CO/SOAP source
-inheritance chain. Corrected configurations require separate runtime checks.
+inheritance chain. Corrected one-hour and surface full-day configurations pass
+strict parent invariance; scenario-specific receipts remain required.
 No export or deposition efficiency is accepted.
 
 ## Evidence and impossible combination
+
+The first surface PBL-mixing call produces species L1 discrepancies of about
+8,648 kg FSOAP, 13,551 kg NPBRCPOA, 35,623 kg PBRCPOA and 112,341 kg DBRCPOA
+despite exact source partitioning. Native VDIFF independently rolls back a
+tracer's countergradient column when it violates its threshold, clips negative
+post-diffusion cells, and restores each tracer's column mass. These operations
+need not act identically on a parent and its components. The opt-in six-phase
+mixing capture localizes these decisions without changing them. Applying a
+parent restoration factor to every origin alone does not establish positivity,
+placement or an origin-consistent countergradient treatment.
 
 Two 600-second native control transport captures replay all parent X/Y/Z flux
 divergences, pressure division and cap duplication. BRCSOA has negative raw

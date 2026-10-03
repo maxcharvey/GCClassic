@@ -6,7 +6,7 @@ baseline=$1
 script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 staging=$(mktemp -d)
 trap 'rm -rf -- "$staging"' EXIT
-for name in hour day invalid;do
+for name in hour day invalid gfas;do
  mkdir "$staging/$name"
  for file in species_database.yml geoschem_config.yml HEMCO_Config.rc HEMCO_Diagn.rc HISTORY.rc;do cp "$baseline/$file" "$staging/$name/$file";done
 done
@@ -26,4 +26,12 @@ if perl "$script_dir/configure_brc_origins.pl" --run-dir "$staging/invalid" > "$
 (cd "$staging/invalid" && sha256sum *.yml *.rc) > "$staging/after"
 cmp "$staging/before" "$staging/after"
 [[ ! -e "$staging/invalid/HISTORY.rc.pre-origins" ]]
-echo 'PASS native CO/SOAP inheritance, safe terminal insertion, date-derived native input, year rollover, hourly/daily intervals, repeated staging and atomic invalid-period refusal'
+perl -0pi -e 's/(--> FINNV25_GFAS_PROFILE\s*:\s*)false/${1}true/' "$staging/gfas/HEMCO_Config.rc"
+rg -q 'FINNV25_GFAS_PROFILE.*true' "$staging/gfas/HEMCO_Config.rc"
+(cd "$staging/gfas" && sha256sum *.yml *.rc) > "$staging/gfas.before"
+if perl "$script_dir/configure_brc_origins.pl" --run-dir "$staging/gfas" > "$staging/gfas.log" 2>&1;then exit 1;fi
+rg -q 'GFAS profile backend is not implemented' "$staging/gfas.log"
+(cd "$staging/gfas" && sha256sum *.yml *.rc) > "$staging/gfas.after"
+cmp "$staging/gfas.before" "$staging/gfas.after"
+[[ ! -e "$staging/gfas/HISTORY.rc.pre-origins" ]]
+echo 'PASS native CO/SOAP inheritance, safe terminal insertion, date-derived native input, year rollover, hourly/daily intervals, repeated staging, atomic invalid-period and unsupported GFAS-profile refusal'

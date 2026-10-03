@@ -45,6 +45,8 @@ for my $p(@parents) {
 $text{'species_database.yml'}=$db.$extra;
 $text{'geoschem_config.yml'}=~s/(^      - PBRCPOA\s*\n)/$1.join('',map {"      - $_\n"} @tags)/me or die "Cannot append transported origins\n";
 my $h=$text{'HEMCO_Config.rc'};
+die "FINNv25 GFAS profile backend is not implemented in this v14.8 branch; use validated PBL/pressure injection settings\n"
+ if $h=~/^\s*--> FINNV25_GFAS_PROFILE\s*:\s*true\b/m;
 die "Requires active harmonized FINNv25 sensitivity\n" unless $h=~/^\s*--> FINNV25_BRC_HARMONIZED_SENSITIVITY\s*:\s*true\b/m;
 die "Requires active FINNv25 extension165\n" unless $h=~/^165\s+FINNv25_Inject\s*:\s*on\b/m;
 my $enabled=$sourceoff?'false':'true';

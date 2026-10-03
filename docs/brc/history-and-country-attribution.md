@@ -61,7 +61,7 @@ and SHA256 manifests. This proves diagnostic availability and unchanged parent
 evolution for this fixture; it does not validate country attribution or all
 injection scenarios.
 
-## Investigated: USA and Canada attribution (not yet implemented)
+## Initial USA and Canada design (historical scope; prototype below)
 
 Recommended initial scope: separate USA and Canada biomass-burning cohorts,
 with a rest-of-world complement. These defaults follow the injection question;
@@ -161,11 +161,14 @@ factor; tags clone parent deposition properties. Country inputs partition the
 native FINN grid by cell centres using pinned Natural Earth 1:50 million polygons.
 This geographic approximation and the transport method remain unqualified.
 
-The single-origin (all UNT) short test reproduces parent restart, dry deposition,
-and wet loss. Initial country configurations failed strict parent invariance
+The single-origin (all UNT) hourly and full-day tests reproduce parent restart,
+dry deposition and signed wet loss. The daily test checks all 28 restart fields
+and 48 dry and 48 wet clone fields; all 21 country restart fields and 12 country
+source diagnostics are exactly zero. Initial country configurations failed strict parent invariance
 because they split an inherited HEMCO source chain; see the safeguard below.
 Separate species transport also produces material local origin-sum residuals.
-Transport accuracy remains a failed acceptance gate. Do not use this prototype
+Operator accuracy remains a failed acceptance gate: PBL mixing first breaks
+closure, and separate advection also fails additivity. Do not use this prototype
 to report country export or Arctic deposition efficiency.
 
 For a bounded offline transport investigation, set
@@ -195,6 +198,12 @@ Its independently reset uniform/checkerboard donor probes test algebraic
 feasibility at each parent stage; they are not sequential origin trajectories or
 a reconstruction of the native limiter. No clipping or renormalization occurs.
 Inventories in this capture use pressure times area, not kilograms.
+The reader also replays native `Qckxyz` column cleanup, including its
+top/interior/bottom handling and uncompensated positive creation. It validates
+the captured FILL flag and units. Four precision/endian signed-profile fixtures
+exercise cleanup; all 28 native parent captures from the first two steps replay
+exactly. Cleanup creation is separately quantified and does not explain away
+the larger operator partition errors.
 `make_brc_flux_fixture.c` supplies synthetic serialization/divergence fixtures,
 including a periodic circulating flux whose checkerboard donor allocation
 creates negative origins despite a positive unchanged parent. It does not test
@@ -242,6 +251,80 @@ failed-case emissions showed SOAP as the only changed physical fire diagnostic;
 corrected input-only, active surface-tag and active elevated-tag reruns reproduce
 all 416 parent restart fields and all 49 common HEMCO numeric fields exactly
 against their matched controls. The elevated test injects 35% of selected fire
-emissions into two pressure-weighted layers above the PBL. These one-hour gates
+emissions into two pressure-weighted layers above the PBL. Both surface and
+elevated matched full-day pairs also pass all 416 physical restart fields and
+49 common HEMCO fields exactly. These hourly and daily gates
 establish physical-parent invariance; they do not resolve the separate failed
 origin-transport closure gate. Individual results remain in the run evidence.
+
+### PBL mixing localization capture
+
+With the transport capture directory enabled, set
+`BRC_PARENT_FLUX_CAPTURE_MIXING_AUDIT=1` and explicitly set
+`BRC_PARENT_FLUX_CAPTURE_STEPS=2`. This requires all 28 registered origins.
+The additional `mix_stepNNNNNN_latNNNN.bin` streams are read-only diagnostic
+observations; the original `BRCFX001` transport schema is unchanged.
+
+`BRCMX001` begins with its eight-byte magic and twelve int32 values: version,
+NX, NZ, dynamics step, latitude index, 35 fields, fp bytes, state-unit code,
+first countergradient level, first restoration level, endian marker, six phases.
+Level indices are one-based in native top-to-bottom order. Units must be native
+kg species/kg dry air (code 2). The 35-field order is each parent followed by
+USA, CAN, ROW, UNT, with parents ordered FSOAP, FSOAS, BRCSOA, NPBRCPOA, WTC,
+PBRCPOA, DBRCPOA. All real arrays use the recorded native fp format and all
+integer masks use int32; arrays are Fortran column-major.
+
+The payload contains Dt, AD(NX,NZ), AREA(NX), and Cflx(NX,35), followed by six
+phase codes and Q(NX,NZ,35) snapshots: incoming state, raw countergradient,
+after tracer-specific column rollback, raw implicit diffusion, after negative
+clipping, and after native column-mass restoration. Between phases three and
+four, an eight-byte `BRCMD001` marker precedes the actual common diffusion
+coefficient arrays CC, ZE, TERM (each NX,NZ) and bottom tendency DQBOT(NX,35).
+These are captured after QVDIFF, which has set ZE at the bottom level to zero;
+the bottom denominator uses ZE at the level above. Finally it stores
+threshold(35), rollback mask(NX,35), restoration numerator(NX,35), denominator
+(NX,35), and actual safe-division branch(NX,35). Full-column inventories use
+Q×AD; restoration targets use only the recorded first-restoration-level:NZ
+range and Cflx×AREA×Dt. Signed intermediates are retained.
+
+`audit_brc_mixing_capture.c` independently replays threshold masks, rollback,
+clipping, all 35 native diffusion solutions, safe-division exponent tests, and
+restoration arguments and scaling.
+It reports signed and cellwise L1 discrepancies and negative counts at every
+phase, boundary-flux closure, and mismatched parent/component guard decisions.
+An explicitly signed offline probe shares only the parent's rollback mask and
+restoration factor across the components, omitting component clipping. It
+compares against actual final parent and parent with clipping omitted, reports
+parent clipping mass, bottom-tendency closure, and negative component inventories.
+It tests algebraic feasibility and does not qualify an origin repair. The run
+receipt must separately require the complete two-step, 91-latitude matrix of
+182 streams, each with six complete phases, and exact physical invariance for
+capture-OFF versus reference and capture-ON versus OFF. Numeric replay tolerances
+are 5e-12 for fp8 and 5e-5 for fp4, without a scientific accuracy threshold.
+
+### Native process-budget QA
+
+`extract_brc_operator_changes.pl` brackets the actual logged inventories at
+600-second dynamics and 1200-second chemistry cadence, including each of the
+seven parents and four origins. `audit_brc_operator_budgets.c` compares 175
+global process increments against 205 native HISTORY budget fields, including
+the combined mixing plus emissions/dry-deposition increment and explicit zero
+FSOAP wet deposition. Budget rates are integrated with interval duration, never
+area. Uninstrumented interstep mass changes remain separately unassigned.
+
+The corrected hourly surface and elevated tests pass every comparison. The
+roundoff QA bound combines 5e-7 of the cellwise absolute CDF integral, 5e-13 of
+the logged inventory-pair scale, and 1e-10 kg; it was fixed before integration.
+It is a bookkeeping check, without a country accuracy acceptance criterion.
+The reader checks units, coordinates, averaging attributes and run span; frozen
+HISTORY frequency/duration and actual model clocks provide the full-interval
+contract because the native files have no explicit CF time bounds.
+
+### Injection support
+
+The tested configurations use PBL injection and a 35% pressure-weighted
+two-layer injection above the PBL. This v14.8 FINNv25 extension does not consume
+the inherited `FINNV25_GFAS_PROFILE` setting as a profile backend. The origin
+stager rejects `true` atomically to avoid mislabelling a pressure-profile run.
+A GFAS-profile experiment requires a separate backend implementation and its
+own qualification.

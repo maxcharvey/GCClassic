@@ -12,7 +12,9 @@ ROOT = Path(__file__).resolve().parents[1]
 METHOD = 'gfas_prepared'
 
 
-def configure(text, template, auxiliary, legacy=False):
+def configure(text, template, auxiliary, legacy=False, fallback='pbl'):
+    if fallback not in ('pbl', 'surface', 'error', 'legacy_65_35_l15'):
+        raise ValueError('Unknown FINN profile fallback')
     def set_option(key, value, required=True):
         nonlocal text
         pattern = rf'^(\s*-->\s*{re.escape(key)}\s*:\s*)\S+'
@@ -51,7 +53,7 @@ def configure(text, template, auxiliary, legacy=False):
     set_option('FINNv25_vertical_injection_levels', '0')
     anchor = re.search(r'^.*-->\s*FINNv25_vertical_injection_levels\s*:[^\n]*\n',text,re.M)
     options = ('    --> FINNV25_GFAS_PROFILE : '+('false' if legacy else 'true')+'\n'
-               '    --> FINNv25_profile_fallback : pbl\n')
+               '    --> FINNv25_profile_fallback : '+fallback+'\n')
     text=text[:anchor.end()]+options+text[anchor.end():]
     marker='# Auxiliary shape only:'
     tail=template[template.index(marker):]
@@ -73,6 +75,7 @@ def main():
     ap.add_argument('--kind',choices=('fullchem','aerosol'),default='fullchem')
     ap.add_argument('--auxiliary',help='Auxiliary filename with optional HEMCO $YYYY/$MM/$DD tokens')
     ap.add_argument('--legacy',action='store_true',help='Same FINN inventory with legacy surface allocation')
+    ap.add_argument('--fallback', choices=('pbl','surface','error','legacy_65_35_l15'), default='pbl')
     args=ap.parse_args()
     path=args.run_dir/'HEMCO_Config.rc'
     backup=path.with_suffix('.rc.before_finn_profile')
@@ -80,7 +83,7 @@ def main():
         raise SystemExit(f'Refusing to overwrite {backup}')
     template=(ROOT/f'src/GEOS-Chem/run/GCClassic/HEMCO_Config.rc.templates/HEMCO_Config.rc.{args.kind}').read_text()
     old=path.read_text()
-    new=configure(old,template,args.auxiliary,args.legacy)
+    new=configure(old,template,args.auxiliary,args.legacy,args.fallback)
     backup.write_text(old)
     path.write_text(new)
     print(f'Configured {METHOD if not args.legacy else "legacy_surface"}: {path}')

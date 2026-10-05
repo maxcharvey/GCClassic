@@ -5,6 +5,14 @@ import unittest
 s=importlib.util.spec_from_file_location('cfg',Path(__file__).with_name('configure_finn_profile.py'))
 m=importlib.util.module_from_spec(s);s.loader.exec_module(m)
 class ConfigTests(unittest.TestCase):
+ def test_opt_in_legacy_fallback(self):
+  t=(m.ROOT/'src/GEOS-Chem/run/GCClassic/HEMCO_Config.rc.templates/HEMCO_Config.rc.fullchem').read_text()
+  out=m.configure(t,t,'./GFAS/$YYYY/$MM/GFAS-smoke-$YYYY$MM$DD.nc',fallback='legacy_65_35_l15')
+  self.assertRegex(out,r'FINNv25_profile_fallback\s*:\s*legacy_65_35_l15')
+  self.assertRegex(out,r'FINNv25_vertical_injection_fraction\s*:\s*0.0')
+  self.assertRegex(out,r'FINNv25_vertical_injection_levels\s*:\s*0')
+  with self.assertRaisesRegex(ValueError,'Unknown'):
+   m.configure(t,t,'./GFAS/file.nc',fallback='invalid')
  def test_inventory_and_auxiliary_switches(self):
   for kind in ('fullchem','aerosol'):
    t=(m.ROOT/f'src/GEOS-Chem/run/GCClassic/HEMCO_Config.rc.templates/HEMCO_Config.rc.{kind}').read_text()

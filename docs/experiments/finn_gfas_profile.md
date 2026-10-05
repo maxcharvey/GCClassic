@@ -15,3 +15,9 @@ This is model-grid profile transfer, not individual fire matching. FINN uses loc
 Build with the established GNU12 Release/fullchem/OpenMP/RRTMG-off configuration. `tests/finn_profile/run.sh ABSOLUTE_BUILD_DIR` compiles strict pure-kernel tests. Run it and full-model validation inside a compute allocation. Unit/source closure does not establish transport conservation or observational realism. The prior FT-retention transport issue is independent.
 
 HEMCO limits base-emission rows to 255 characters before comment removal. Use short run-local symlinks for long FINN and auxiliary input paths; the configuration helper rejects auxiliary rows that exceed this limit.
+
+## WE-CAN monthly sensitivity
+
+Explicit `--fallback legacy_65_35_l15` uses the existing pressure-weighted fire injection routine with elevated fraction 0.35 and 15 levels, only for FINN-emitting columns without GFAS support. Invalid PBL/pressure or insufficient levels remain fatal. Default PBL fallback, disabled-option behavior and supported profiles are unchanged. This is not a physically validated default.
+
+Use `configure_brc_deposition.pl --monthly` for the 71 parent deposition/process fields. All seasonal diagnostics use monthly means; restarts are monthly instantaneous and PlaneFlight retains point sampling. FSOAP is included in concentration and process budgets but is non-depositing.

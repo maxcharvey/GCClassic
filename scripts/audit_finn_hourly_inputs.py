@@ -14,10 +14,18 @@ from audit_finn_daily_source import AVOGADRO, ORACLE_GATE, edges, overlaps
 from test_fire_templates import selected_block
 
 
-def maps(d, lat, lon):
+def maps(d, lat, lon, sp_boundaries=False):
     assert np.all(np.diff(d['lat'][:]) > 0) and np.all(np.diff(d['lon'][:]) > 0)
     y = overlaps(edges(d['lat'][:], True), np.r_[-90., np.arange(-89., 90., 2.), 90.], True)
     x = overlaps(edges(d['lon'][:]), np.r_[lon-1.25, lon[-1]+1.25])
+    if sp_boundaries:
+        # HEMCO's A2A geometry stores sine-latitude boundaries in SP.
+        # Support is discontinuous at coincident edges; double geometry can
+        # invent a tiny overlap where the production boundaries coincide.
+        sy = np.asarray(np.sin(np.deg2rad(edges(d['lat'][:], True))), dtype=np.float32).astype(np.float64)
+        ty = np.asarray(np.sin(np.deg2rad(np.r_[-90., np.arange(-89., 90., 2.), 90.])), dtype=np.float32).astype(np.float64)
+        y = overlaps(sy, ty)
+        x = overlaps(np.asarray(edges(d['lon'][:]), dtype=np.float32).astype(np.float64), np.r_[lon-1.25, lon[-1]+1.25])
     return y, x
 
 
@@ -127,7 +135,7 @@ def audit(run):
                 assert d['cofire_3d'].units == 'kg/m2/s' and len(d['lev']) == 36
                 assert d['cofire_3d'].dimensions == ('time', 'lev', 'lat', 'lon')
                 assert len(d['time']) == 1 and np.array_equal(d['lev'][:], np.arange(1.,37.))
-                y, x = maps(d, lat, lon)
+                y, x = maps(d, lat, lon, sp_boundaries=True)
                 ref = np.zeros((47, len(lat), len(lon)))
                 for lev in range(36):
                     raw = np.asarray(np.ma.filled(d['cofire_3d'][0,lev], 0), dtype=np.float64)
@@ -139,7 +147,11 @@ def audit(run):
         total, weights = gcache[day]
         supported = (actual > 0)&(total > 0)
         unsupported = (actual > 0)&(total == 0)
-        assert np.all(fall[supported] == 0) and np.array_equal(fall[unsupported], actual[unsupported])
+        assert np.all(fall[supported] == 0) and np.array_equal(fall[unsupported], actual[unsupported]), {
+            'run': run.name, 'stamp': key,
+            'supported_fallback_cells': int(np.count_nonzero(fall[supported])),
+            'unsupported_mismatches': int(np.count_nonzero(fall[unsupported] != actual[unsupported])),
+            'disputed_reference_totals': total[supported & (fall > 0)].tolist()}
         allocated = np.divide(layer, actual, out=np.zeros_like(layer), where=actual > 0)
         shape_den = float(np.sum(actual[supported]*area[supported]))
         shape_error = float(np.sum(np.abs(allocated[:,supported]-weights[:,supported])*actual[supported]*area[supported]))/shape_den if shape_den else 0.

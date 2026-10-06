@@ -85,3 +85,9 @@ pairing approximation. `audit_finn_hourly_inputs.py` independently checks the
 selected monthly timezone map, clock policy, exact native CO date/phase and
 the normalized installed36-layer GFAS profile; producer/height physics remain
 unqualified.
+
+Audit configuration dates use decimal strings through YAML BaseLoader, including
+leading-zero non-midnight end times. The independent GFAS support oracle uses
+HEMCO's SP sine-latitude/longitude boundary policy: a double-only boundary can
+create phantom nonzero overlap at coincident edges. Native FINN mass integration
+retains its independent double spherical overlap; no acceptance gate is widened.

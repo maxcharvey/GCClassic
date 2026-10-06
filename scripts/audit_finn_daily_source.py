@@ -54,9 +54,9 @@ def audit(run):
     assert re.search(r'^DiagnFreq:\s+00000000\s+010000\s*$', text, re.M)
     timestamp = re.search(r'^DiagnTimeStamp:\s+(\w+)', text, re.M)
     assert timestamp is None or timestamp[1].lower() == 'start'
-    config = yaml.safe_load((run/'geoschem_config.yml').read_text())['simulation']
+    config = yaml.load((run/'geoschem_config.yml').read_text(), Loader=yaml.BaseLoader)['simulation']
     def date(parts):
-        return dt.datetime.strptime(f'{int(parts[0]):08d}{int(parts[1]):06d}', '%Y%m%d%H%M%S')
+        return dt.datetime.strptime(f'{int(parts[0],10):08d}{int(parts[1],10):06d}', '%Y%m%d%H%M%S')
     start, end = date(config['start_date']), date(config['end_date'])
     first = start.replace(hour=0, minute=0, second=0)
     if first < start: first += dt.timedelta(days=1)

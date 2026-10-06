@@ -5,6 +5,18 @@ import unittest
 s=importlib.util.spec_from_file_location('cfg',Path(__file__).with_name('configure_finn_profile.py'))
 m=importlib.util.module_from_spec(s);s.loader.exec_module(m)
 class ConfigTests(unittest.TestCase):
+ def test_explicit_timezone_hours_path(self):
+  t=(m.ROOT/'src/GEOS-Chem/run/GCClassic/HEMCO_Config.rc.templates/HEMCO_Config.rc.fullchem').read_text()
+  out=m.configure(t,t,'./GFAS/file.nc',timezone_hours='./TIMEZONES/hours.nc')
+  self.assertRegex(out,r'\* TIMEZONES ./TIMEZONES/hours.nc UTC_OFFSET 2017/1-12/1/0 C xy count')
+  with self.assertRaisesRegex(ValueError,'255-character limit'):
+   m.configure(t,t,'./GFAS/file.nc',timezone_hours='./'+('x'*260)+'.nc')
+ def test_rejects_read_once_daily_inventory(self):
+  t=(m.ROOT/'src/GEOS-Chem/run/GCClassic/HEMCO_Config.rc.templates/HEMCO_Config.rc.fullchem').read_text()
+  start=t.index('(((FINNv25\n');end=t.index(')))FINNv25\n',start)
+  stale=t[:start]+t[start:end].replace(' RF xy ', ' EF xy ')+t[end:]
+  with self.assertRaisesRegex(ValueError, 'must use RF'):
+   m.configure(t,stale,'./GFAS/file.nc')
  def test_opt_in_legacy_fallback(self):
   t=(m.ROOT/'src/GEOS-Chem/run/GCClassic/HEMCO_Config.rc.templates/HEMCO_Config.rc.fullchem').read_text()
   out=m.configure(t,t,'./GFAS/$YYYY/$MM/GFAS-smoke-$YYYY$MM$DD.nc',fallback='legacy_65_35_l15')
@@ -30,6 +42,7 @@ class ConfigTests(unittest.TestCase):
      aux=[x for x in out.splitlines() if x.startswith('165 FINNV25_GFAS_')]
      self.assertEqual(len(aux),1 if m.METHOD=='gfas_prepared' else 4)
      self.assertTrue(all('/tmp/aux.nc' in x for x in aux))
+     self.assertTrue(all(x.split()[5]=='RFY' for x in aux))
  def test_historical_config_without_qfed_proxy_option(self):
   t=(m.ROOT/'src/GEOS-Chem/run/GCClassic/HEMCO_Config.rc.templates/HEMCO_Config.rc.fullchem').read_text()
   old=re.sub(r'^.*--> QFED2_BRC_HARMONIZED_SENSITIVITY[^\n]*\n','',t,flags=re.M)

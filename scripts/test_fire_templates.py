@@ -58,6 +58,10 @@ class FireTemplateTests(unittest.TestCase):
                             "FINNv25_Inject": injection,
                             "FINNV25_BRC_HARMONIZED_SENSITIVITY": harmonized})
                         self.assertTrue(rows)
+                        for row in rows:
+                            if '.nc' in row[2]:
+                                self.assertEqual(row[5], 'RF', row[1])
+                                self.assertEqual(row[4].split('/')[2], '1-31')
                         self.assertEqual({r[0] for r in rows}, {"165" if injection else "0"})
                         self.assertEqual(len({r[1] for r in rows}), len(rows))
                         if injection:

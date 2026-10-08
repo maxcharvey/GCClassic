@@ -1,0 +1,24 @@
+{
+  "accepted_tag": "accepted/wecan-finn-gfas-2018-20261008",
+  "run_root": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/runs/validation/BRC_148_FINN_GFAS_WECAN_REFRESH_FIX_20261006",
+  "period": "2018-05-01 through 2018-10-01 exclusive",
+  "source_pins": {
+    ".": "3964b03a74ec6605a7a5d2c413ec67d0d1f23269",
+    "src/GEOS-Chem": "653318269a14ca63f8ad1ff325c15085cf1f2d1c",
+    "src/HEMCO": "c508376a9def7e8cac2df794a822250669001d0f",
+    "src/Cloud-J": "f78dca88e8767f9885e98a2889e89233ddeedf54",
+    "src/HETP": "df2f942853e886c7830bcfd78606f06114cbd7e5",
+    "docs/source/geos-chem-shared-docs": "f8821288e7e7329bd66ba763af9f3cf903ffffcd"
+  },
+  "binary_sha256": "3a3dfdadc410cc9f49979911fe71e782e417321a114db743b91891feb8d714bf",
+  "build_identity": "Production binary was built from base pins plus the same functional Fortran repair later committed as HEMCOc508376; embedded version metadata remains base/dirty. No Fortran edits after successful build. GEOS changes are runtime configuration templates; helper/audit commits were finalized afterward. Final HEAD is source provenance, not an assertion that it is embedded in the binary.",
+  "rrtmg_enabled": false,
+  "qualification": "Completed seasonal engineering/source-closure acceptance. Physical optics and observational skill remain separate.",
+  "artifact_sha256": {
+    "cases/season/geoschem_config.yml": "595c96cf91341f5143c96714efba0eceed4164d50d70285c966de540274bb583",
+    "cases/season/HISTORY.rc": "e01e7e11f7c0df2fe6991bfd11d3863148ff7bbe40453d06890ad6b388a0a9d0",
+    "cases/season/HEMCO_Config.rc": "c940fcbdc45b032b9d179a51639d5676f0250b6813939f7cedf3d6f26154ade6",
+    "SOURCE_MANIFEST.json": "5c6919a65d910c61d109fe64c2e077a27a8cf402fb32ac378d109cf4e94bfa08",
+    "ARGON_DELIVERY_RECEIPT_20261008.json": "0646fa85ff7dccf7bd7b812b75c94e49940c85e2f68afdbc48e6257f079801f8"
+  }
+}

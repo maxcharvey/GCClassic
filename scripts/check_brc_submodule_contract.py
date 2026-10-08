@@ -87,7 +87,7 @@ def remote_record(repo, path, expected_url, branch):
     }
 
 
-def check_contract(repo, branch="integration/brc-14.8.0", remote=False,
+def check_contract(repo, branch="max/brc", remote=False,
                    expected_urls=None):
     """Check the wrapper/submodule provenance contract and return a JSON-ready dict."""
     root = Path(repo).resolve()
@@ -170,7 +170,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", type=Path, required=True,
                         help="GCClassic wrapper checkout to inspect")
-    parser.add_argument("--branch", default="integration/brc-14.8.0",
+    parser.add_argument("--branch", default="max/brc",
                         help="remote branch required by --remote")
     parser.add_argument("--remote", action="store_true",
                         help="also require origin/<branch> to equal each local integration HEAD")

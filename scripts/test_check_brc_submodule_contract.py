@@ -75,9 +75,9 @@ class SubmoduleContractTests(unittest.TestCase):
             if args[:1] == ("ls-remote",):
                 local_head = original_git(repo, "rev-parse", "HEAD").strip()
                 if mode == "match":
-                    return f"{local_head}\trefs/heads/integration/brc-14.8.0\n"
+                    return f"{local_head}\trefs/heads/max/brc\n"
                 if mode == "different":
-                    return f"{'0' * 40}\trefs/heads/integration/brc-14.8.0\n"
+                    return f"{'0' * 40}\trefs/heads/max/brc\n"
                 if mode == "absent":
                     return ""
                 if mode == "failure":

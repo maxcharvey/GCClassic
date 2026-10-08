@@ -13,8 +13,8 @@ GCClassic, GEOS-Chem, HEMCO and Cloud-J.
   the corrected FINN-mass/GFAS-profile hybrid used for the successful
   May-September 2018 WE-CAN season. Merge reviewed BrC development here.
 - `accepted/wecan-finn-gfas-2018-20261008` records the exact accepted source
-  checkpoint in all four repositories. Later documentation commits may
-  advance `max/brc` without changing this acceptance tag.
+  checkpoint in all four repositories. Later documentation or repository
+  tooling commits may advance `max/brc` without changing this acceptance tag.
 - `baseline/gcclassic-14.8.0` records each official release component commit.
 
 RRTMG remains disabled in the accepted seasonal build and configuration.
@@ -27,7 +27,10 @@ observational skill.
 
 - `feature/brc-country-tracking`: consolidated country-source and process
   development in GCClassic, GEOS-Chem and HEMCO. Unqualified experimental
-  source is committed separately from the accepted hybrid.
+  source is committed separately from the accepted hybrid. Its preserved
+  development lineage requires dedicated integration checks before adopting
+  the latest hybrid repairs; overlapping HEMCO source changes are not merged
+  during branch cleanup.
 - `feature/finn-gfas-gaussian-14.8` and
   `feature/finn-gfas-uniform-14.8`: separate injection sensitivities in
   GCClassic, GEOS-Chem and HEMCO.

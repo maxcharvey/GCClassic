@@ -27,6 +27,7 @@ set(EXE_FILE_NAME gcclassic CACHE STRING
 mark_as_advanced(EXE_FILE_NAME)
 
 add_executable(${EXE_FILE_NAME}
+  GEOS-Chem/Interfaces/GCClassic/plume_checkpoint_mod.F90
   GEOS-Chem/Interfaces/GCClassic/main.F90
 )
 target_link_libraries(${EXE_FILE_NAME}
@@ -37,6 +38,47 @@ set_target_properties(${EXE_FILE_NAME}
   PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
+
+#-----------------------------------------------------------------------------
+# Optional compiled regression matrix for the conservative Qck bottom policy.
+# It is default-off so normal GCClassic builds and production workflows are
+# unchanged unless this explicit verification target is requested.
+#-----------------------------------------------------------------------------
+option(BUILD_QCK_BOTTOM_REGRESSION
+  "Build the Qck bottom conservative-correction regression executable" OFF)
+if(BUILD_QCK_BOTTOM_REGRESSION)
+  add_executable(qck_bottom_regression
+    GEOS-Chem/test/qck_bottom_regression.F90
+  )
+  target_link_libraries(qck_bottom_regression
+    PRIVATE
+    GeosCore
+  )
+  set_target_properties(qck_bottom_regression
+    PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+  )
+endif()
+
+#-----------------------------------------------------------------------------
+# Optional compiled regression for the exact-band dry absorption arithmetic.
+# It is default-off and does not allocate or mutate GEOS-Chem model state.
+#-----------------------------------------------------------------------------
+option(BUILD_DRY_ABSORPTION_REGRESSION
+  "Build the exact-band dry absorption regression executable" OFF)
+if(BUILD_DRY_ABSORPTION_REGRESSION)
+  add_executable(dry_absorption_regression
+    GEOS-Chem/test/dry_absorption_regression.F90
+  )
+  target_link_libraries(dry_absorption_regression
+    PRIVATE
+    GeosCore
+  )
+  set_target_properties(dry_absorption_regression
+    PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+  )
+endif()
 
 #-----------------------------------------------------------------------------
 # If GEOS-Chem Classic has been configured with -DKPPSA=y, then:

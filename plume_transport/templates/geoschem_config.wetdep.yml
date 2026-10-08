@@ -1,0 +1,78 @@
+### Stage-1 wet-deposition A/B configuration (stage1-wet-deposition-v1).
+
+simulation:
+  name: TransportTracers
+  start_date: [__PLUME_START_YYYYMMDD__, __PLUME_START_HHMMSS__]
+  end_date: [__PLUME_END_YYYYMMDD__, __PLUME_END_HHMMSS__]
+  root_data_dir: /cluster/work/climate/GEOS-Chem/ExtData/
+  met_field: MERRA2
+  species_database_file: ./species_database.yml
+  species_metadata_output_file: OutputDir/geoschem_species_metadata.yml
+  verbose:
+    activate: false
+    on_cores: root
+  use_gcclassic_timers: true
+  read_restart_as_real8: true
+
+grid:
+  resolution: 4.0x5.0
+  number_of_levels: 72
+  longitude:
+    range: [-180.0, 180.0]
+    center_at_180: true
+  latitude:
+    range: [-90.0, 90.0]
+    half_size_polar_boxes: true
+  nested_grid_simulation:
+    activate: false
+    buffer_zone_NSEW: [0, 0, 0, 0]
+
+timesteps:
+  transport_timestep_in_s: __PLUME_TRANSPORT_TIMESTEP_S__
+  chemistry_timestep_in_s: __PLUME_CHEMISTRY_TIMESTEP_S__
+
+operations:
+
+  chemistry:
+    activate: true
+
+  convection:
+    activate: true
+
+  dry_deposition:
+    activate: true
+
+  pbl_mixing:
+    activate: true
+    use_non_local_pbl: false
+
+  transport:
+    gcclassic_tpcore:
+      activate: true
+      fill_negative_values: __PLUME_TPCORE_FILL_NEGATIVE_VALUES__
+      iord_jord_kord: [3, 3, 7]
+    transported_species:
+      - PLUME_SFC
+      - PLUME_PBL
+      - PLUME_6535
+      - PLUME_LEV
+      - PLUME_PROFILE
+
+  # The sole A/B operator switch in this contract.
+  wet_deposition:
+    activate: __PLUME_WET_DEPOSITION_ACTIVE__
+
+extra_diagnostics:
+
+  obspack:
+    activate: false
+    quiet_logfile_output: false
+    input_file: ./unused_obspack_input.nc
+    output_file: ./OutputDir/GEOSChem.ObsPack.YYYYMMDD_hhmmz.nc4
+    output_species:
+      - PLUME_SFC
+
+  planeflight:
+    activate: false
+    flight_track_file: ./unused_planeflight_input.dat
+    output_file: ./OutputDir/plane.log.YYYYMMDD

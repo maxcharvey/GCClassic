@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "id": "stage1-firex-aq-tier-f-mechanical-match-20190806-v1",
+  "scope": "direct-one-second-carrier-mechanical-model-matching-only",
+  "carrier_join": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-aq-tier-f-phase2-join-20190806-retry1/carrier_join.csv",
+  "model_histories": [
+    "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-exact-band-20190806-daily-v1/OutputDir/GEOSChem.FirexExact.20190806_0010z.nc4",
+    "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-exact-band-20190806-daily-v1/OutputDir/GEOSChem.FirexExact.20190807_0000z.nc4",
+    "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-exact-band-20190807-daily-v1/OutputDir/GEOSChem.FirexExact.20190807_0010z.nc4"
+  ],
+  "frozen_hashes": {
+    "carrier_join": "cb6e7c10129fd23578be5ff175d4956a41ffc0b8892de20b782ec55dad81c911",
+    "phase2_seal": "0e2a9f38865a91bab6566860e25a76e8803e9701990718b2948875850031aed2",
+    "phase2_artifact_manifest": "781365b2849b92505bd2e53f14dfe8705b55118e07b81b9e0682311e12c59ec2",
+    "model_history_1": "4254d51cd4472a31f1d549cf11fa38c07cb1076424c84f19faff056921d004a8",
+    "model_history_2": "adc00f183e8f320d16a3856129e809a41ea1fb9a075566e41fda23dc6347fac9",
+    "model_history_3": "d7276305abc88d8b1d0cd93ab15c278cabaea8a46c5453716664061b74c4b20a",
+    "dry_absorption_operator": "d8a90bffd1e941cf9af9504b05c30219da6835142f7c1a394243b8836a2388a8",
+    "history_time": "096cdecf0fffaa20567adb10ea3ee54e341e3d98f42d03977fa904ff5b4bc096",
+    "matcher": "2c5dfae5251ce65ba7f0a56d04c02537c19fe882fce4e3e2541acbf29c6efe01",
+    "model_file_adapter": "565541784e82b6a8147f86016e4c41b6e74f12084c3b6bb26ccb1768f60c0db5"
+  },
+  "carrier": {
+    "expected_rows": 27096,
+    "order": "carrier_ordinal",
+    "time": "2019-08-06T00:00:00Z plus Time_Start seconds",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "altitude_msl_m": "MSL_GPS_Altitude",
+    "post_midnight_clip": false,
+    "time_start_integral": true,
+    "time_stop_equals_time_start_plus_one": true,
+    "science_field_filter": false
+  },
+  "matching": {
+    "algorithm": "accepted-native-CF-time-nearest-centre-matcher",
+    "maximum_time_offset_seconds": 600.0,
+    "maximum_latitude_offset_degrees": 1.0,
+    "maximum_longitude_offset_degrees": 1.25,
+    "maximum_vertical_offset_m": 1000.0,
+    "nearest_fill": false,
+    "interpolation": false,
+    "agreement_dependent_rematching": false
+  },
+  "volume_state": {
+    "input": "dry-ambient-volume",
+    "output": "dry-AOP-reference-volume",
+    "reference_temperature_k": 273.0,
+    "reference_pressure_hpa": 1013.0
+  },
+  "closure": {
+    "components": ["BC", "BrC", "OA", "Dust", "Other"],
+    "rtol": 1e-6,
+    "atol_mm1": 1e-8,
+    "finite_nonnegative_required": true,
+    "failure_action": "stop-without-rematching"
+  },
+  "tier_e_regression_anchor": {
+    "observation_path": "/cluster/work/climate/mharvey/Data/FIREX-AQ/withAMS_SP2rebin_v1_AOPrebin_v1_20260723_20190806/FIREXAQ-mrg60-DC8-NC_merge_20190806_R3_with_AMS_SP2rebin-v1_AOPrebin-v1.nc",
+    "observation_sha256": "a5aee10424c31d719053614d64c745dec159edfaa7e1556981d87271c1b0a54b",
+    "expected_rows": 85,
+    "expected_summary_sha256": "4ac29194f2d88fb800632dbaed4128c82286f7054bf876d9b12e68c634d2954d",
+    "expected_csv_sha256": "99046a67d05965f1cc683990fa573fc4fd4ae81e63d2527ced8af22cd323f771",
+    "role": "byte-identical implementation regression only; never a Tier-F filter or rematching input"
+  },
+  "python": {
+    "required_argon_path": "/usr/local/Miniconda3-envs/envs/2024/envs/iacpy3_2024/bin/python",
+    "euler_path": "/cluster/software/stacks/2024-06/spack/opt/spack/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/python-3.11.6-ukhwpjnwzzzizek3pgr75zkbhxros5fq/bin/python3.11",
+    "exception_reason": "The required Argon environment is absent on Euler; retain the already accepted pinned Euler CPython 3.11.6, NumPy 1.25.2, and h5py 3.11.0 portability exception."
+  },
+  "stops_before": [
+    "exclusions",
+    "cohorts",
+    "clusters-or-support-inventories",
+    "statistics",
+    "scientific-interpretation",
+    "model-build-or-run",
+    "day-eight"
+  ]
+}

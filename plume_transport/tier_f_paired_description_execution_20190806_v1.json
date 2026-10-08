@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "id": "stage1-firex-aq-tier-f-paired-description-20190806-v1-execution",
+  "date": "2026-07-28",
+  "status": "retry1-independent-validation-PASS",
+  "scope": "supported-primary-paired-description-only",
+  "source_commit": "dcb2e3e5c4eba89f8f4b839841ea34c3c3a91e31",
+  "source_hashes": {
+    "design": "901404b9bcf92a28c55015e439d6a62cdf05f533205c6d01f5896f09aa5730f7",
+    "contract": "b97a4d875ff5eb904dd36b79991717738ae8c21e96b21011c3f34e39aecb7b8b",
+    "implementation": "a5003b41942a30aedcb837205be37eb136f80f52523501c2101e5ba56f371f76",
+    "validator": "f425218fd0f8e7d054422076fda83d848859056956a5370c1a82ee6c9b69a691",
+    "focused_tests": "39edd929f39da5623fb8b3e531df53b394eea12bdc0500c6cff30e610924460e"
+  },
+  "attempts": [
+    {
+      "root": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-aq-tier-f-paired-description-20190806-v1",
+      "reproduction_root": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-aq-tier-f-paired-description-20190806-v1-reproduction1",
+      "status": "REJECTED-INDEPENDENT-AUDIT",
+      "reason": "binary-float cumulative-weight boundary ambiguity changed seven independently recomputed weighted quartiles",
+      "mean_error_values_affected": false,
+      "promoted": false
+    },
+    {
+      "root": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-aq-tier-f-paired-description-20190806-retry1",
+      "reproduction_root": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-aq-tier-f-paired-description-20190806-retry1-reproduction1",
+      "status": "PASS",
+      "recovery": "exact-decimal cumulative-weight comparisons with fresh no-clobber roots",
+      "promoted": true
+    }
+  ],
+  "tests": {
+    "focused": {
+      "passed": 20,
+      "total": 20
+    },
+    "ordinary": {
+      "passed": 273,
+      "total": 273
+    },
+    "manifest_dependent_profiles": {
+      "passed": 3,
+      "total": 3
+    }
+  },
+  "accepted": {
+    "primary_root": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-aq-tier-f-paired-description-20190806-retry1",
+    "reproduction_root": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-aq-tier-f-paired-description-20190806-retry1-reproduction1",
+    "primary_artifact_manifest_sha256": "6d0590df8084f081879f02154e1377dfd6991b9ad1f9a09c0d2e5a3059d5175c",
+    "reproduction_artifact_manifest_sha256": "8182b73f9572ff43b086a3672afdf27f8ae8b6af25db791e1549a77a190c3e42",
+    "independent_validation_sha256": "535ae25763eb0499fb30a30acd3307db6b6aa8168c7b780c9422d7e897da7cdd",
+    "byte_identical_science_outputs": 4,
+    "paired_formula_checks": 8058,
+    "independently_recomputed_metric_values": 96,
+    "output_sha256": {
+      "paired_points.csv": "3e897931141133afce1374e72e8ba675c78abe9f36a85a8441b74705eaf854b2",
+      "paired_summary.csv": "fab773f134fee7af0a5c5c13a18c6cb4c5ac8541e16f9ce323c55212a24121ab",
+      "metric_release_status.csv": "821bc924735d0de0b7b8e7da5b23508939e13417ebd4523221e2574d5200738d",
+      "paired_description_summary.json": "90a291d85ea2a8775a9bf8270d23ef01fa842f82468ebedb442a3c0c39e4b72e"
+    }
+  },
+  "execution": {
+    "local": true,
+    "slurm": false,
+    "python_version": "3.11.6",
+    "numpy_version": "1.25.2",
+    "interpreter": "/cluster/software/stacks/2024-06/spack/opt/spack/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/python-3.11.6-ukhwpjnwzzzizek3pgr75zkbhxros5fq/bin/python3.11",
+    "interpreter_exception": "previously accepted Euler portability exception",
+    "random_seed_applicable": false
+  },
+  "blocked": {
+    "Pearson_Spearman": "inconclusive_insufficient_independent_support",
+    "whole_cluster_interval_95": "inconclusive_insufficient_independent_support",
+    "age_pattern": "inconclusive_insufficient_independent_support",
+    "age_uncertainty_pattern": "inconclusive_age_boundary_uncertainty",
+    "bootstrap_executed": false,
+    "scientific_interpretation": false,
+    "rematching": false,
+    "model_execution": false,
+    "day_eight": false
+  }
+}

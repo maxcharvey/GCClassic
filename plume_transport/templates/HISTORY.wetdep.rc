@@ -1,0 +1,53 @@
+###############################################################################
+### Stage-1 wet-deposition A/B diagnostics at the 10-minute heartbeat.       ###
+###############################################################################
+
+EXPID: ./OutputDir/GEOSChem
+
+COLLECTIONS: 'Restart',
+             'SpeciesConc',
+             'Budget',
+             'WetLossConv',
+             'WetLossLS',
+::
+
+  Restart.filename:      './Restarts/GEOSChem.Restart.%y4%m2%d2_%h2%n2z.nc4',
+  Restart.frequency:     'End',
+  Restart.duration:      'End',
+  Restart.mode:          'instantaneous'
+  Restart.fields:        'SpeciesRst_?ALL?               ',
+                         'Met_DELPDRY                    ',
+                         'Met_BXHEIGHT                   ',
+                         'Met_TropLev                    ',
+::
+
+  SpeciesConc.template:  '%y4%m2%d2_%h2%n2z.nc4',
+  SpeciesConc.frequency: 00000000 002000
+  SpeciesConc.duration:  00000000 002000
+  SpeciesConc.mode:      'time-averaged'
+  SpeciesConc.fields:    'SpeciesConcVV_?ALL?           ',
+::
+
+  Budget.template:       '%y4%m2%d2_%h2%n2z.nc4',
+  Budget.frequency:      00000000 001000
+  Budget.duration:       00000000 001000
+  Budget.mode:           'time-averaged'
+  Budget.fields:         'BudgetWetDepFull_?WET?        ',
+                         'BudgetEmisDryDepFull_?ADV?    ',
+                         'BudgetTransportFull_?ADV?     ',
+::
+
+  WetLossConv.template:  '%y4%m2%d2_%h2%n2z.nc4',
+  WetLossConv.frequency: 00000000 001000
+  WetLossConv.duration:  00000000 001000
+  WetLossConv.mode:      'time-averaged'
+  WetLossConv.fields:    'WetLossConv_?WET?             ',
+                         'WetLossConvFrac_?WET?         ',
+::
+
+  WetLossLS.template:    '%y4%m2%d2_%h2%n2z.nc4',
+  WetLossLS.frequency:   00000000 001000
+  WetLossLS.duration:    00000000 001000
+  WetLossLS.mode:        'time-averaged'
+  WetLossLS.fields:      'WetLossLS_?WET?               ',
+::

@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "id": "stage1-firex-aq-tier-f-phase2-join-20190806-v1",
+  "project": "gc-plume-transport",
+  "scope": "source-record-preserving-join-only",
+  "flight_date": "2019-08-06",
+  "python": {
+    "required_argon_path": "/usr/local/Miniconda3-envs/envs/2024/envs/iacpy3_2024/bin/python",
+    "euler_exception_path": "/cluster/software/stacks/2024-06/spack/opt/spack/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/python-3.11.6-ukhwpjnwzzzizek3pgr75zkbhxros5fq/bin/python3.11",
+    "exception_reason": "The required Argon environment is absent on Euler; the pinned standard-library Python is the interpreter used by the accepted v2 acquisition."
+  },
+  "roots": {
+    "sealed_v1": "/cluster/work/climate/mharvey/Data/FIREX-AQ/tier-f-20190806-v1",
+    "sealed_v2": "/cluster/work/climate/mharvey/Data/FIREX-AQ/tier-f-20190806-authorities-v2"
+  },
+  "frozen_hashes": {
+    "v1_seal": "fab2ea935a03dcf911782d2b410a84dbe7330b33ba7ff7be41919d446f883371",
+    "v1_manifest": "5687ca23d0cb8845a6544b82fe4ea1508fb43d0c28588026aaf37b77f8c88ee7",
+    "v2_seal": "6858e99aaa5d749694ffc3270a908f76f45a281715e1c285483c9b3c1785db15",
+    "v2_manifest": "287f2a52b21dec61f1e4ae7accd761ac64532df4d677f8e468365d6dfead69be",
+    "v2_contract": "4c92f52681b60d1e01bae91f414114118d320731df22f12a7b4b28907e7bce9e",
+    "v2_semantic_audit": "751480629cdf5e85e5d3150ccd20b8106edd798f971d8838e1c3f3815db9228d",
+    "v2_r12_audit": "9f5872128754a8a8d7b5cd8b6383e5d633c162a5709a5b0b78f911c856fea518"
+  },
+  "expected": {
+    "carrier_records": 27096,
+    "carrier_first_time": 64994,
+    "carrier_last_time": 92089,
+    "r9_records": 27097,
+    "aop_records": 27097,
+    "fsu_records": 27096,
+    "sp2_records": 27097,
+    "ams_records": 28709,
+    "r12_august6_records": 25
+  },
+  "mapping": {
+    "intervals": "source-declared-half-open-positive-overlap",
+    "nearest_fill": false,
+    "interpolation": false,
+    "aggregation": false,
+    "fallback": false
+  },
+  "stops_before": [
+    "60-second-reaggregation",
+    "model-matching",
+    "cohort-construction",
+    "statistics",
+    "scientific-interpretation",
+    "model-build-or-run"
+  ]
+}

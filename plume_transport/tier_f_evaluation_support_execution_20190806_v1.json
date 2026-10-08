@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "id": "stage1-firex-aq-tier-f-evaluation-support-20190806-v1-execution",
+  "source_commit": "dcb2e3e5c4eba89f8f4b839841ea34c3c3a91e31",
+  "source_state": "new gate files individually SHA-pinned in pre-existing dirty worktree",
+  "scope": "local deterministic inventory execution and reproduction; no statistics or model run",
+  "authorization": {
+    "same_turn_user_authorized": true,
+    "statistics": false,
+    "model_or_slurm_execution": false,
+    "day_eight": false
+  },
+  "python": {
+    "required_argon_path": "/usr/local/Miniconda3-envs/envs/2024/envs/iacpy3_2024/bin/python",
+    "required_path_present": false,
+    "accepted_euler_exception": "/cluster/software/stacks/2024-06/spack/opt/spack/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/python-3.11.6-ukhwpjnwzzzizek3pgr75zkbhxros5fq/bin/python3.11",
+    "version": "3.11.6",
+    "numpy": "1.25.2"
+  },
+  "pins": {
+    "design_sha256": "1ee339146f3e6440ea41bdd9bb709c24f0eb9bc32dd43743075d11346090d6db",
+    "contract_sha256": "61c3de9ec9b01909d33812b6ba48e8a69c53442c909c72f25c3402748e629101",
+    "implementation_sha256": "cc43123d101954475ae9c0ac4b9b8bec178e0d18d5401d53605705324a531403",
+    "test_sha256": "591a4db830b9c09900457bd66373858e489134368b9706bf5f4411bd9a6ae6af"
+  },
+  "preflight": {
+    "py_compile": "PASS",
+    "focused_tests": "30/30 PASS including exact FSU seconds-to-hours conversion",
+    "primary_root_fresh": true,
+    "reproduction_root_fresh": true,
+    "random_seed": {
+      "applicable": false,
+      "reason": "inventory gate is deterministic and executes no bootstrap"
+    }
+  },
+  "outputs": {
+    "failed_attempt": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-aq-tier-f-evaluation-support-20190806-v1",
+    "superseded_attempt": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-aq-tier-f-evaluation-support-20190806-retry1",
+    "unit_rejected_attempt": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-aq-tier-f-evaluation-support-20190806-retry2",
+    "primary": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-aq-tier-f-evaluation-support-20190806-retry3",
+    "reproduction": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-aq-tier-f-evaluation-support-20190806-retry3-reproduction1"
+  }
+}

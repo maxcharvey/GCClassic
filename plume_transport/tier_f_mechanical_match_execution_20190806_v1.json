@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "source_commit": "dcb2e3e5c4eba89f8f4b839841ea34c3c3a91e31",
+  "source_state_note": "Tier-F gate files are new and SHA-pinned individually because the shared worktree contains pre-existing uncommitted project work.",
+  "stochastic_seed": {
+    "applicable": false,
+    "reason": "The frozen nearest-neighbour matcher, conversion, and validators are deterministic and use no random-number generator."
+  },
+  "contract": {
+    "path": "plume_transport/tier_f_mechanical_match_contract_20190806_v1.json",
+    "sha256": "45082ce8339534e68b41b53508ae2533d1bf923853d01a610a60703c3dd639fa"
+  },
+  "design": {
+    "path": "plume_transport/tier_f_mechanical_match_design_20190806_v1.md",
+    "sha256": "9939119ea2828a55a575401aae7690dcae9e54a7202aad015d6eaca76b49d1e0"
+  },
+  "implementation": {
+    "producer_sha256": "20272331d965d8ebbdbda42234f4fb2e58f742316dd852731e37c6067d44db41",
+    "validator_sha256": "393f6a9d16cf51d2cee577cc412eebccdd822427e53264ea6c382b8af86a38bb",
+    "matcher_sha256": "2c5dfae5251ce65ba7f0a56d04c02537c19fe882fce4e3e2541acbf29c6efe01",
+    "history_decoder_sha256": "096cdecf0fffaa20567adb10ea3ee54e341e3d98f42d03977fa904ff5b4bc096",
+    "dry_operator_sha256": "d8a90bffd1e941cf9af9504b05c30219da6835142f7c1a394243b8836a2388a8",
+    "model_file_adapter_sha256": "565541784e82b6a8147f86016e4c41b6e74f12084c3b6bb26ccb1768f60c0db5"
+  },
+  "tests": {
+    "producer_sha256": "47b2731e6e4e9c5fe2bafedd57f774cdb26681a231d60a6a5fc36fc91c2e7ed1",
+    "validator_sha256": "f74a5f00f624665cad02a4dcf968ec50b1aac7ed5f8bd7ef0de76424f22dda8e",
+    "focused_preflight": "31 passed"
+  },
+  "run": {
+    "directory": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-aq-tier-f-mechanical-match-20190806-v1",
+    "readme_sha256": "624988366f77bd6e153804af327d8946333eeec89e7ab5babcf0dfd540993dd2",
+    "wrapper_sha256": "afcbfb3322ffcbf98be470fcccf300bdb2e2f5dc1f05fef5186c65103e07423f",
+    "wrapper_syntax": "PASS",
+    "output_directories_empty": true
+  },
+  "resources": {
+    "partition": "normal.4h",
+    "account": "es_heald",
+    "nodes": 1,
+    "tasks": 1,
+    "cpus_per_task": 1,
+    "memory": "16G",
+    "time": "01:00:00"
+  },
+  "authorization": {
+    "same_turn_user_authorized": true,
+    "scope": "Tier-F mechanical matcher revalidation only",
+    "model_execution": false,
+    "later_science_gates": false
+  }
+}

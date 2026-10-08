@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "id": "stage1-firex-aq-tier-f-evaluation-support-20190806-v1",
+  "scope": "exclusion-cluster-uncertainty-and-minimum-support-inventories-only",
+  "flight_date": "2019-08-06",
+  "inputs": {
+    "phase2_root": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-aq-tier-f-phase2-join-20190806-retry1",
+    "mechanical_root": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-aq-tier-f-mechanical-match-20190806-v1",
+    "ams_payload": "/cluster/work/climate/mharvey/Data/FIREX-AQ/tier-f-20190806-v1/raw/FIREXAQ-AMS_DC8_20190806_R3.ict",
+    "semantic_audit": "/cluster/work/climate/mharvey/Data/FIREX-AQ/tier-f-20190806-authorities-v2/audits/authority_semantic_audit.json"
+  },
+  "frozen_hashes": {
+    "phase2_carrier": "cb6e7c10129fd23578be5ff175d4956a41ffc0b8892de20b782ec55dad81c911",
+    "phase2_links": "8ee9ee2c914db84c4bec665411f99a2f520bf18460d1a2b647c1e80b50d82741",
+    "phase2_seal": "0e2a9f38865a91bab6566860e25a76e8803e9701990718b2948875850031aed2",
+    "mechanical_rows": "69663d10672177b3b389da7eb3aed63bcf5120bd26a140768e789dd950260147",
+    "mechanical_summary": "7383f652194e06b1cd81cb27d06e2e2f856a4e775cee40fedb6ee618c307f7fc",
+    "mechanical_validation": "6f11e58519e702a4edb4e65d6c30fddc3e172a3ea097f35429c73828d87d342b",
+    "mechanical_seal": "59844ba3cc2f2c4d0a212f76e5de80abc5991683c94289a000aaa69394d52ae9",
+    "aop_payload": "4a019208546fa7a44960db3ca15a38332f2491fd4c9638f5fb43c1bfc8de1813",
+    "fsu_payload": "af242ae34ec1b8a3c4a5ba934d9429697070eff18f20689baa772d867a398a80",
+    "sp2_payload": "4b29aac4dd6325ef159cdfbc2616f6bea0a14a2c56cbdcdb651c6ae70b3e5f3a",
+    "ams_payload": "7d95a686c1a72150814f1bd04fa09f89fabe69da12f01ebd3e36ad2e0df54e8e",
+    "semantic_audit": "751480629cdf5e85e5d3150ccd20b8106edd798f971d8838e1c3f3815db9228d"
+  },
+  "expected": {
+    "rows": 27096,
+    "mechanical_accepted": 27061,
+    "mechanical_vertical_rejections": 35,
+    "post_midnight_rows": 5690
+  },
+  "cascade_order": [
+    "source_preserved",
+    "exact_regime_metadata",
+    "smoke_flag_equals_1",
+    "finite_navigation",
+    "valid_mechanical_match",
+    "valid_abs_405",
+    "valid_abs_532",
+    "valid_abs_664",
+    "exclude_special_fire_10.1_10.2"
+  ],
+  "special_fire_ids": ["10.1", "10.2"],
+  "age": {
+    "source_unit": "seconds",
+    "bin_unit": "hours",
+    "exact_conversion": "source_decimal_divided_by_3600",
+    "bins_hours": [0, 0.5, 1, 2, 4, 8, "infinity"],
+    "envelope": "closed-untruncated",
+    "minimum_stable_fraction": 0.8,
+    "method_codes": [1, 2, 3, 4, 5, 6, 7],
+    "Holmes_crosswalk": "accepted-by-frozen-semantic-audit"
+  },
+  "cluster": {
+    "top_level": "flight-date-x-exact-fire-ID-x-exact-plume-ID",
+    "nested": "exact-transect-ID",
+    "floating_point_identifier_roundtrip": false
+  },
+  "minimum_support": {
+    "point_summary": {"rows": 10, "model_states": 5},
+    "mean_error": {"rows": 20, "model_states": 5},
+    "association": {
+      "rows": 30,
+      "model_states": 10,
+      "clusters": 5,
+      "nonzero_variation": true
+    },
+    "cluster_interval": {"clusters": 10},
+    "age_pattern": {"bins_passing_point_summary": 3}
+  },
+  "python": {
+    "required_argon_path": "/usr/local/Miniconda3-envs/envs/2024/envs/iacpy3_2024/bin/python",
+    "euler_path": "/cluster/software/stacks/2024-06/spack/opt/spack/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/python-3.11.6-ukhwpjnwzzzizek3pgr75zkbhxros5fq/bin/python3.11",
+    "exception": "previously accepted Euler portability exception; NumPy 1.25.2"
+  },
+  "stops_before": [
+    "paired-summary-statistics",
+    "correlation",
+    "bootstrap",
+    "scientific-interpretation",
+    "model-change-or-run",
+    "day-eight"
+  ]
+}

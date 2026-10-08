@@ -1,0 +1,83 @@
+---
+### Frozen Stage-1 V0 source-only configuration.
+
+simulation:
+  name: TransportTracers
+  start_date: [20190101, 000000]
+  end_date: [20190101, 002000]
+  root_data_dir: /cluster/work/climate/GEOS-Chem/ExtData/
+  met_field: MERRA2
+  species_database_file: ./species_database.yml
+  species_metadata_output_file: OutputDir/geoschem_species_metadata.yml
+  verbose:
+    activate: false
+    on_cores: root
+  use_gcclassic_timers: true
+  read_restart_as_real8: true
+
+grid:
+  resolution: 4.0x5.0
+  number_of_levels: 72
+  longitude:
+    range: [-180.0, 180.0]
+    center_at_180: true
+  latitude:
+    range: [-90.0, 90.0]
+    half_size_polar_boxes: true
+  nested_grid_simulation:
+    activate: false
+    buffer_zone_NSEW: [0, 0, 0, 0]
+
+timesteps:
+  transport_timestep_in_s: 600
+  chemistry_timestep_in_s: 1200
+
+operations:
+
+  # TransportTracers chemistry is retained so that normal tracer setup and
+  # source bookkeeping run, but all five plume tags have Snk_Mode: none.
+  chemistry:
+    activate: true
+
+  convection:
+    activate: false
+
+  dry_deposition:
+    activate: false
+
+  # LTURB is false, while GCClassic still invokes Do_Mixing/DO_TEND on the
+  # transport heartbeat.  This applies HEMCO tendencies without redistributing
+  # the deliberately distinct vertical source profiles.
+  pbl_mixing:
+    activate: false
+    use_non_local_pbl: false
+
+  transport:
+    gcclassic_tpcore:
+      activate: false
+      fill_negative_values: true
+      iord_jord_kord: [3, 3, 7]
+    transported_species:
+      - PLUME_SFC
+      - PLUME_PBL
+      - PLUME_6535
+      - PLUME_LEV
+      - PLUME_PROFILE
+
+  wet_deposition:
+    activate: false
+
+extra_diagnostics:
+
+  obspack:
+    activate: false
+    quiet_logfile_output: false
+    input_file: ./unused_obspack_input.nc
+    output_file: ./OutputDir/GEOSChem.ObsPack.YYYYMMDD_hhmmz.nc4
+    output_species:
+      - PLUME_SFC
+
+  planeflight:
+    activate: false
+    flight_track_file: ./unused_planeflight_input.dat
+    output_file: ./OutputDir/plane.log.YYYYMMDD

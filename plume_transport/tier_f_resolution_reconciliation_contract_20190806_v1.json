@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "id": "stage1-firex-aq-tier-f-resolution-reconciliation-20190806-v1",
+  "scope": "complete-direct-source-to-accepted-tier-e-60-second-reconciliation-only",
+  "phase2_root": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-aq-tier-f-phase2-join-20190806-retry1",
+  "tier_e_netcdf": "/cluster/work/climate/mharvey/Data/FIREX-AQ/withAMS_SP2rebin_v1_AOPrebin_v1_20260723_20190806/FIREXAQ-mrg60-DC8-NC_merge_20190806_R3_with_AMS_SP2rebin-v1_AOPrebin-v1.nc",
+  "phase2_contract": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-gcclassic/plume_transport/phase2_tier_f_join_contract_20190806_v1.json",
+  "frozen_hashes": {
+    "phase2_seal": "0e2a9f38865a91bab6566860e25a76e8803e9701990718b2948875850031aed2",
+    "phase2_artifact_manifest": "781365b2849b92505bd2e53f14dfe8705b55118e07b81b9e0682311e12c59ec2",
+    "phase2_source_inventory": "96c4cb4723615e599d11fdb07eab3d3634b2d50a29d786a20a175b6d3eb9d560",
+    "phase2_links": "8ee9ee2c914db84c4bec665411f99a2f520bf18460d1a2b647c1e80b50d82741",
+    "phase2_carrier_join": "cb6e7c10129fd23578be5ff175d4956a41ffc0b8892de20b782ec55dad81c911",
+    "tier_e_netcdf": "a5aee10424c31d719053614d64c745dec159edfaa7e1556981d87271c1b0a54b",
+    "aop_payload": "4a019208546fa7a44960db3ca15a38332f2491fd4c9638f5fb43c1bfc8de1813",
+    "sp2_payload": "4b29aac4dd6325ef159cdfbc2616f6bea0a14a2c56cbdcdb651c6ae70b3e5f3a",
+    "v1_seal": "fab2ea935a03dcf911782d2b410a84dbe7330b33ba7ff7be41919d446f883371",
+    "v2_seal": "6858e99aaa5d749694ffc3270a908f76f45a281715e1c285483c9b3c1785db15"
+  },
+  "mapping": {
+    "intervals": "tier-e-explicit-half-open-time-bounds",
+    "membership": "target_start-lte-source-Time_Start-lt-target_stop",
+    "nearest_fill": false,
+    "interpolation": false,
+    "fallback": false,
+    "duplicate_source_records": false
+  },
+  "expected": {
+    "tier_e_bins": 452,
+    "bin_seconds": 60,
+    "direct_records": {
+      "AOP": 27097,
+      "SP2": 27097
+    },
+    "coverage_per_product": {
+      "tier_e_inside_linked": 27080,
+      "tier_e_inside_unlinked": 1,
+      "tier_e_outside_linked": 16,
+      "tier_e_outside_unlinked": 0
+    },
+    "aop": {
+      "abs_dry_405": {"valid_records": 19124, "valid_bins": 411},
+      "abs_dry_532": {"valid_records": 15952, "valid_bins": 364},
+      "abs_dry_664": {"valid_records": 9839, "valid_bins": 235}
+    },
+    "sp2": {
+      "valid_mass_records": 23940,
+      "valid_mass_bins": 409,
+      "n_undiluted": 18744,
+      "n_diluted": 5196,
+      "mixed_bins": 2
+    }
+  },
+  "comparison": {
+    "counts_and_states": "exact",
+    "missing": "semantic-missing-vs-missing",
+    "finite_values": "identical-float32-bit-pattern",
+    "float64_residual": "diagnostic-non-gating",
+    "float32_ulp_distance": "diagnostic-non-gating"
+  },
+  "python": {
+    "required_argon_path": "/usr/local/Miniconda3-envs/envs/2024/envs/iacpy3_2024/bin/python",
+    "euler_path": "/cluster/software/stacks/2024-06/spack/opt/spack/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/python-3.11.6-ukhwpjnwzzzizek3pgr75zkbhxros5fq/bin/python3.11",
+    "exception_reason": "The required Argon iacpy path is absent on Euler; retain the pinned Euler CPython 3.11.6 plus NumPy 1.25.2 and h5py 3.11.0 portability exception accepted for the preceding Phase-2 gate."
+  },
+  "stops_before": [
+    "model-matching",
+    "model-reference-state-conversion",
+    "cohort-construction",
+    "cluster-or-support-inventories",
+    "statistics",
+    "scientific-interpretation",
+    "model-build-or-run",
+    "day-eight"
+  ]
+}

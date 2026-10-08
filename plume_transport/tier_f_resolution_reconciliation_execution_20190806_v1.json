@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "id": "stage1-firex-aq-tier-f-resolution-reconciliation-20190806-v1-execution",
+  "status": "review-ready-local-execution",
+  "authorization": {
+    "user_authorized_next_steps": true,
+    "authorized_date": "2026-07-27",
+    "cluster_submission": false,
+    "model_run": false,
+    "statistics": false,
+    "later_phase": false
+  },
+  "method_gate": {
+    "science_advisor_verdict": "CONSISTENT",
+    "complete_direct_sources_required": true,
+    "terminal_inside_unlinked_record_required": true,
+    "all_452_tier_e_bins_required": true
+  },
+  "tests": {
+    "focused": "7-passed",
+    "ordinary_project": "242-passed",
+    "profile": "3-passed"
+  },
+  "python": {
+    "path": "/cluster/software/stacks/2024-06/spack/opt/spack/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/python-3.11.6-ukhwpjnwzzzizek3pgr75zkbhxros5fq/bin/python3.11",
+    "version": "3.11.6",
+    "numpy": "1.25.2",
+    "h5py": "3.11.0",
+    "reason": "The required Argon iacpy path is absent on Euler; this retains the pinned Euler portability exception accepted for the preceding Phase-2 gate."
+  },
+  "fresh_outputs": {
+    "primary": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-aq-tier-f-resolution-reconciliation-20190806-v1",
+    "reproduction": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-aq-tier-f-resolution-reconciliation-20190806-reproduction1",
+    "comparison": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-aq-tier-f-resolution-reconciliation-20190806-reproduction1-comparison.json"
+  },
+  "artifacts": {
+    "design": "c4f63eb90d88ee29198d39a87eda6f8b0654c975cca2e3b8c296d9a3f94455cd",
+    "contract": "a743a42dba250d355ac89eee35a2741d28a43a30b9918c76e36810c1721d4672",
+    "implementation": "eff8fa54556415cd1245f8e5d3bacab9f7c6f2604294c3121e6bcd371ba7f0a6",
+    "focused_tests": "5c9377f5119a19fb14fe339865d07440b889ebe68e024c45111daacc4aef0fe0",
+    "phase2_runtime_helper": "9c79cbe0758df5462c45164263b437392d75ef18db2c3bfe7a19ecc41b678a24",
+    "authority_runtime_helper": "2e0032a11c9f493a8841ec6e12a7a2cdc2c403d9602094bb884647c11325d152"
+  },
+  "stops_before": [
+    "model matching",
+    "model reference-state conversion",
+    "cohorts",
+    "clusters or support inventories",
+    "statistics",
+    "scientific interpretation",
+    "model build or run",
+    "day eight"
+  ]
+}

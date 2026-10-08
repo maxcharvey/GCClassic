@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "id": "stage1-firex-aq-tier-f-paired-description-20190806-v1",
+  "scope": "supported-primary-paired-description-only",
+  "flight_date": "2019-08-06",
+  "design": {
+    "path": "plume_transport/tier_f_paired_description_design_20190806_v1.md",
+    "sha256": "901404b9bcf92a28c55015e439d6a62cdf05f533205c6d01f5896f09aa5730f7"
+  },
+  "inputs": {
+    "support_root": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-aq-tier-f-evaluation-support-20190806-retry3",
+    "mechanical_rows": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-aq-tier-f-mechanical-match-20190806-v1/OutputDir/tier_f_mechanical_matches.csv",
+    "carrier_rows": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-aq-tier-f-phase2-join-20190806-retry1/carrier_join.csv"
+  },
+  "frozen_hashes": {
+    "row_membership": "8c23f94bcdd47cbf523a3923c4a917b55d8fcccf444b438c1b901196529984ed",
+    "support_inventory": "fce409c2c6fe923ee1a47660bc58405ae1602a83be15dd7ec3df178e625f3e4a",
+    "acceptance_seal": "4effadbefbaa00f7b0b30327607a3ed398e22a4ef16329209b1626574f3a065f",
+    "mechanical_rows": "69663d10672177b3b389da7eb3aed63bcf5120bd26a140768e789dd950260147",
+    "carrier_rows": "cb6e7c10129fd23578be5ff175d4956a41ffc0b8892de20b782ec55dad81c911"
+  },
+  "expected": {
+    "carrier_rows": 27096,
+    "C_abs_primary_rows": 2041,
+    "C_aae_primary_rows": 1935,
+    "primary_clusters": 2,
+    "primary_model_states": 17,
+    "support_seal_status": "SEALED-AUDIT-PASS"
+  },
+  "endpoints": [
+    {
+      "id": "abs_405",
+      "cohort": "C_abs_primary",
+      "observation_field": "aop__abs_dry_405",
+      "model_field": "model_abs_405_tot_aop_reference_mm1",
+      "unit": "Mm-1"
+    },
+    {
+      "id": "abs_532",
+      "cohort": "C_abs_primary",
+      "observation_field": "aop__abs_dry_532",
+      "model_field": "model_abs_532_tot_aop_reference_mm1",
+      "unit": "Mm-1"
+    },
+    {
+      "id": "abs_664",
+      "cohort": "C_abs_primary",
+      "observation_field": "aop__abs_dry_664",
+      "model_field": "model_abs_664_tot_aop_reference_mm1",
+      "unit": "Mm-1"
+    },
+    {
+      "id": "AAE_405_664",
+      "cohort": "C_aae_primary",
+      "observation_fields": [
+        "aop__abs_dry_405",
+        "aop__abs_dry_664"
+      ],
+      "model_fields": [
+        "model_abs_405_tot_aop_reference_mm1",
+        "model_abs_664_tot_aop_reference_mm1"
+      ],
+      "unit": "dimensionless",
+      "formula": "-ln(short/long)/ln(405/664)"
+    }
+  ],
+  "weighting": {
+    "primary": "equal-total-weight-per-top-level-cluster",
+    "primary_row_weight": "1/(number_of_contributing_clusters*rows_in_row_cluster)",
+    "secondary": "equal-weight-per-row",
+    "weighted_quantile": "first-value-with-inclusive-cumulative-normalized-weight-greater-than-or-equal-to-q",
+    "sort_tie_breaker": "carrier_ordinal"
+  },
+  "support": {
+    "point_summary": {
+      "minimum_rows": 10,
+      "minimum_model_states": 5
+    },
+    "mean_error": {
+      "minimum_rows": 20,
+      "minimum_model_states": 5
+    },
+    "association": "inconclusive_insufficient_independent_support",
+    "whole_cluster_interval": "inconclusive_insufficient_independent_support",
+    "age_pattern": "inconclusive_insufficient_independent_support",
+    "age_uncertainty_pattern": "inconclusive_age_boundary_uncertainty"
+  },
+  "numerics": {
+    "calculation_type": "numpy-float64",
+    "finite_required": true,
+    "residual": "model-minus-observation",
+    "quantiles": [
+      0.25,
+      0.5,
+      0.75
+    ],
+    "json_nan_allowed": false
+  },
+  "outputs": [
+    "paired_points.csv",
+    "paired_summary.csv",
+    "metric_release_status.csv",
+    "paired_description_summary.json",
+    "run_manifest.json",
+    "ARTIFACT_MANIFEST.json"
+  ],
+  "python": {
+    "required_argon_path": "/usr/local/Miniconda3-envs/envs/2024/envs/iacpy3_2024/bin/python",
+    "euler_path": "/cluster/software/stacks/2024-06/spack/opt/spack/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/python-3.11.6-ukhwpjnwzzzizek3pgr75zkbhxros5fq/bin/python3.11",
+    "exception": "previously accepted Euler portability exception; NumPy 1.25.2"
+  },
+  "blocked": [
+    "Pearson",
+    "Spearman",
+    "bootstrap",
+    "sampling-interval",
+    "measurement-interval",
+    "age-bin-summary",
+    "age-pattern",
+    "sensitivity",
+    "percentage-error",
+    "MAPE",
+    "ratio-error",
+    "normalized-bias",
+    "log-error",
+    "skill-score",
+    "p-value",
+    "scientific-interpretation",
+    "rematching",
+    "model-change-or-run",
+    "day-eight"
+  ]
+}

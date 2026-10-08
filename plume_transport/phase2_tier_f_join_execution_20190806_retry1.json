@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "id": "stage1-firex-aq-tier-f-phase2-join-20190806-retry1-execution",
+  "status": "review-ready-not-submitted",
+  "scope": "sentinel-accounting-recovery-focused-tests-full-project-tests-primary-join-reproduction-join-deterministic-comparison",
+  "parent_failed_audit": {
+    "slurm_job_id": "8795712",
+    "reason": "SP2 variable-declared -9999.99 missing lexeme was preserved but validation incorrectly reported zero missing values",
+    "preserve_outputs": true
+  },
+  "authorization": {
+    "user_authorized_overnight_work": true,
+    "authorized_date": "2026-07-27",
+    "model_run": false,
+    "statistics": false,
+    "later_phase": false
+  },
+  "resources": {
+    "partition": "normal.4h",
+    "nodes": 1,
+    "tasks": 1,
+    "cpus_per_task": 1,
+    "memory_per_cpu": "16G",
+    "walltime": "02:00:00"
+  },
+  "python": {
+    "path": "/cluster/software/stacks/2024-06/spack/opt/spack/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/python-3.11.6-ukhwpjnwzzzizek3pgr75zkbhxros5fq/bin/python3.11",
+    "version": "3.11.6",
+    "reason": "Pinned standard-library Euler interpreter used by the accepted v2 acquisition; the required Argon iacpy path is absent on Euler."
+  },
+  "git": {
+    "outer_head": "dcb2e3e5c4eba89f8f4b839841ea34c3c3a91e31",
+    "outer_branch": "plume-transport/initial-source-bridge",
+    "geos_chem_head": "f5ab3ba60bb010bcce60692ebe6d179e8e9133e1",
+    "model_source_executed": false,
+    "documented_dirty_state_preserved": true
+  },
+  "fresh_outputs": {
+    "primary": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-aq-tier-f-phase2-join-20190806-retry1",
+    "reproduction": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-aq-tier-f-phase2-join-20190806-retry1-reproduction1",
+    "comparison": "/cluster/work/climate/mharvey/ModelDevlopment/BrC/plume-transport-runs/stage1-firex-aq-tier-f-phase2-join-20190806-retry1-reproduction1-comparison.json"
+  },
+  "artifacts": {
+    "design": {
+      "path": "phase2_tier_f_join_design_20190806_v1.md",
+      "sha256": "eb8f6735233b66aa83c264588a29542095fa1cc6acb43164fe72f1b4d2d7d7f5"
+    },
+    "contract": {
+      "path": "phase2_tier_f_join_contract_20190806_v1.json",
+      "sha256": "8fb3690029ff50f7f75f2d5aac7b061f924af29211eaf8f6782e5a5bbcf40469"
+    },
+    "implementation": {
+      "path": "firex_tier_f_phase2_join.py",
+      "sha256": "9c79cbe0758df5462c45164263b437392d75ef18db2c3bfe7a19ecc41b678a24"
+    },
+    "authority_audit_runtime_helper": {
+      "path": "fetch_firex_aq_tier_f_authorities.py",
+      "sha256": "2e0032a11c9f493a8841ec6e12a7a2cdc2c403d9602094bb884647c11325d152"
+    },
+    "focused_tests": {
+      "path": "test_firex_tier_f_phase2_join.py",
+      "sha256": "1f4a0adef010e8154cfd951cafea88d439a808d50731ddfe026119410efe419e",
+      "preflight_result": "19-passed"
+    },
+    "wrapper": {
+      "path": "run_phase2_tier_f_join_20190806_retry1.sbatch",
+      "sha256": "2bf346a039cbd64b576d29b131a612945542f73274c925b029aa82e89525d494"
+    },
+    "checksum_file": {
+      "path": "phase2_tier_f_join_execution_20190806_retry1.sha256",
+      "sha256": "06a620647fd1c63f73cbb6052e4fb3c7cf3da4ff04e8ff865a8bb5f6269914e8"
+    }
+  },
+  "stop_conditions": [
+    "any checksum mismatch",
+    "any focused or project test failure",
+    "any frozen input or seal mismatch",
+    "any pre-existing output path",
+    "any join or validation failure",
+    "SP2 missing token count other than 3141",
+    "any primary-reproduction deterministic mismatch"
+  ],
+  "stops_before": [
+    "60-second reaggregation",
+    "model matching",
+    "cohort construction",
+    "statistics",
+    "scientific interpretation",
+    "model build or execution"
+  ]
+}

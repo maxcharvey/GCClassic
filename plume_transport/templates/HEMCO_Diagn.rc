@@ -1,0 +1,6 @@
+# Name               Spec              ExtNr  Cat Hier Dim OutUnit
+EmisPLUME_SFC         PLUME_SFC         -1     -1  -1   3   kg/m2/s
+EmisPLUME_PBL         PLUME_PBL         -1     -1  -1   3   kg/m2/s
+EmisPLUME_6535        PLUME_6535        -1     -1  -1   3   kg/m2/s
+EmisPLUME_LEV         PLUME_LEV         -1     -1  -1   3   kg/m2/s
+EmisPLUME_PROFILE     PLUME_PROFILE     -1     -1  -1   3   kg/m2/s

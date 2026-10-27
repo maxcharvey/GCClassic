@@ -65,6 +65,7 @@ jobs:
           bash test/implementation/qfed_brc_wiring_test.sh
           python3 test/implementation/brc_bioburn_diagn_test.py
           python3 test/implementation/brc_background_keys_test.py
+          bash test/implementation/run_history_startup_test.sh
 
       - name: Fire emission and injection numerical tests
         run: |

@@ -66,6 +66,17 @@ jobs:
           python3 test/implementation/brc_bioburn_diagn_test.py
           python3 test/implementation/brc_background_keys_test.py
           bash test/implementation/run_history_startup_test.sh
+          bash test/implementation/run_restart_validation_tests.sh
+
+      - name: Reject unsupported REAL4 configuration
+        run: |
+          if cmake -S . -B build_real4_rejected -DUSE_REAL8=OFF > real4_configure.log 2>&1; then
+            cat real4_configure.log
+            echo "Unsupported REAL4 configuration unexpectedly succeeded"
+            exit 1
+          fi
+          cat real4_configure.log
+          grep -F "This BrC branch requires USE_REAL8=ON" real4_configure.log
 
       - name: Fire emission and injection numerical tests
         run: |

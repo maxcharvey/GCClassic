@@ -26,6 +26,12 @@ can be REAL32. Portability must separate fixed64-bit grid/time validation from
 model-precision pressure/cache operations and be tested before supporting that
 configuration.
 
+This BrC wrapper rejects `USE_REAL8=OFF` at CMake configuration time with an
+explicit support message. This guard does not repair REAL4 portability. The
+qualified REAL8 numerical code and compiler definitions are unchanged. CI runs
+the restart validation fixtures and checks the unsupported-configuration refusal
+in every compiler lane, alongside the existing REAL8 compilation tests.
+
 Run the standalone regressions in a compute allocation with the configured
 Fortran compiler and NetCDF environment:
 

@@ -9,18 +9,20 @@ GetOptions('history=s' => \$file, 'short-test-hourly' => \$short, 'monthly' => \
 $file && !@ARGV or die "Usage: $0 --history HISTORY.rc [--short-test-hourly]\n";
 open my $in, '<', $file or die "$file: $!\n";
 local $/; my $text = <$in>; close $in;
-my @aerosol = qw(PBRCPOA NPBRCPOA DBRCPOA BRCSOA WTC FSOAS);
+my @aerosol = qw(PBRCPOA NPBRCPOA DBRCPOA BRCSOA PWTC SWTC FSOAS FOCPI FOCPO);
+# DBRCPOA retains dry deposition but has no wet removal.
+my @wet = grep { $_ ne 'DBRCPOA' } @aerosol;
 my @family = (@aerosol, 'FSOAP');
 my %fields = (
  BrCDryDep => [map { my $p = $_; map { "${p}_$_" } @aerosol } qw(DryDep DryDepVel)],
- BrCWetLoss => [map { my $p = $_; map { "${p}_$_" } @aerosol } qw(WetLossConv WetLossConvFrac WetLossLS)],
+ BrCWetLoss => [map { my $p = $_; map { "${p}_$_" } @wet } qw(WetLossConv WetLossConvFrac WetLossLS)],
  BrCProcessBudget => [
   (map { my $p = $_; map { "Budget${p}Full_$_" } @family } qw(EmisDryDep Chemistry Transport Mixing Convection)),
-  (map { "BudgetWetDepFull_$_" } @aerosol)
+  (map { "BudgetWetDepFull_$_" } @wet)
  ],
 );
 # Never replace unrelated collections or manually authored blocks with these names.
-$text =~ s/\n# BEGIN managed BrC deposition\n.*?# END managed BrC deposition\n//s;
+$text =~ s/\n# BEGIN managed BrC deposition\n.*?# END managed BrC deposition\n/\n/s;
 for my $name (keys %fields) {
     $text !~ /^\s*\Q$name\E\./m or die "Unmanaged $name block exists; refusing overwrite\n";
 }
@@ -35,19 +37,27 @@ my $cadence = $monthly ? '00000100 000000' : $short ? '00000000 010000' : '00000
 # A blank line after an inactive block can make Classic's HISTORY reader
 # skip the next block. Keep the appended boundary free of blank lines.
 $text =~ s/\s*\z/\n/;
-$text .= "# BEGIN managed BrC deposition\n";
-$text .= "# Dry flux: molec cm-2 s-1; velocity: cm s-1; wet loss/budgets: kg s-1.\n";
-$text .= "# FSOAP has no deposition flags. EmisDryDep is a combined operator budget.\n";
+my $managed = "";
+$managed .= "# BEGIN managed BrC deposition\n";
+$managed .= "# Dry flux: molec cm-2 s-1; velocity: cm s-1; wet loss/budgets: kg s-1.\n";
+$managed .= "# FSOAP has no deposition flags. EmisDryDep is a combined operator budget.\n";
 for my $name (qw(BrCDryDep BrCWetLoss BrCProcessBudget)) {
- $text .= "  $name.template: '%y4%m2%d2_%h2%n2z.nc4',\n";
- $text .= "  $name.frequency: $cadence\n  $name.duration: $cadence\n";
- $text .= "  $name.mode: 'time-averaged'\n";
+ $managed .= "  $name.template: '%y4%m2%d2_%h2%n2z.nc4',\n";
+ $managed .= "  $name.frequency: $cadence\n  $name.duration: $cadence\n";
+ $managed .= "  $name.mode: 'time-averaged'\n";
  my @f = @{$fields{$name}};
- $text .= "  $name.fields: '" . shift(@f) . "',\n";
- $text .= join('', map { "                    '$_',\n" } @f);
- $text .= "::\n";
+ $managed .= "  $name.fields: '" . shift(@f) . "',\n";
+ $managed .= join('', map { "                    '$_',\n" } @f);
+ $managed .= "::\n";
 }
-$text .= "# END managed BrC deposition\n";
+$managed .= "# END managed BrC deposition\n";
+# Insert before BC's first active property, preserving its complete definition.
+# COLLECTIONS ordering alone does not control Classic startup output.
+if ($text =~ /^[ \t]*BoundaryConditions\./m) {
+ $text =~ s/^([ \t]*BoundaryConditions\.)/$managed$1/m;
+} else {
+ $text .= $managed;
+}
 # Replace only after all validation; preserve permissions and retain a backup.
 my $tmp = "$file.brc.tmp";
 !-e $tmp or die "Temporary file already exists: $tmp\n";
@@ -59,4 +69,5 @@ if (!-e "$file.before_brc") {
  require File::Copy; File::Copy::copy($file, "$file.before_brc") or die "Backup failed: $!\n";
 }
 rename $tmp, $file or die "Rename failed: $!\n";
-print "Enabled BrCDryDep (12), BrCWetLoss (18), BrCProcessBudget (41); cadence $cadence\n";
+print 'Enabled ' . join(', ', map { "$_ (" . scalar(@{$fields{$_}}) . ')' }
+    qw(BrCDryDep BrCWetLoss BrCProcessBudget)) . "; cadence $cadence\n";

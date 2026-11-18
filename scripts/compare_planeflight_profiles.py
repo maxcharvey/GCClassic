@@ -37,7 +37,7 @@ MISSING_SENTINELS = frozenset((-999.0, -9999.0, -99999.0, -999999.0,
 # intentionally excluded rather than being assigned an invented common unit.
 CHEMICAL_SPECIES = frozenset((
     "OCPI", "OCPO", "BCPI", "BCPO", "SOAS", "SOAP", "FSOAP", "FSOAS",
-    "NPBRCPOA", "DBRCPOA", "BRCSOA", "WTC", "PBRCPOA", "FFOCPI", "FFOCPO",
+    "NPBRCPOA", "DBRCPOA", "BRCSOA", "WTC", "PWTC", "SWTC", "PBRCPOA", "FFOCPI", "FFOCPO",
     "CO", "O3", "BENZ", "PHEN", "FURA", "CH2Cl2",
 ))
 

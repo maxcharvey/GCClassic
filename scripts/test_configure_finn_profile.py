@@ -5,6 +5,43 @@ import unittest
 s=importlib.util.spec_from_file_location('cfg',Path(__file__).with_name('configure_finn_profile.py'))
 m=importlib.util.module_from_spec(s);s.loader.exec_module(m)
 class ConfigTests(unittest.TestCase):
+ def test_height_only_preserves_custom_paths_and_fallback(self):
+  t=(m.ROOT/'src/GEOS-Chem/run/GCClassic/HEMCO_Config.rc.templates/HEMCO_Config.rc.fullchem').read_text()
+  old=m.configure(t,t,'./custom/GFAS/$YYYY$MM$DD.nc',fallback='legacy_65_35_l15')
+  old=old.replace('$ROOT/FINN/v2025-06/','./custom/FINN/')
+  old=re.sub(r'^.*--> FINNv25_GFAS_height_scale[^\n]*\n','',old,flags=re.M)
+  for factor in (0.8,1.0,1.2):
+   new=m.configure_height_scale(old,factor)
+   stripped=re.sub(r'^.*--> FINNv25_GFAS_height_scale[^\n]*\n','',new,flags=re.M)
+   self.assertEqual(stripped,old)
+   changed=m.configure_height_scale(new,1.2)
+   self.assertEqual(changed.count('--> FINNv25_GFAS_height_scale'),1)
+   self.assertIn('FINNv25_GFAS_height_scale : 1.2',changed)
+  with self.assertRaisesRegex(ValueError,'Duplicate'):
+   m.configure_height_scale(new+'    --> FINNv25_GFAS_height_scale : 1.0\n',0.8)
+  with self.assertRaisesRegex(ValueError,'requires'):
+   m.configure_height_scale(t,0.8)
+ def test_height_scaling_on_accepted_layout(self):
+  for kind in ('fullchem','aerosol'):
+   t=(m.ROOT/f'src/GEOS-Chem/run/GCClassic/HEMCO_Config.rc.templates/HEMCO_Config.rc.{kind}').read_text()
+   # The already accepted runs predate the new option.
+   old=re.sub(r'^.*--> FINNv25_GFAS_height_scale[^\n]*\n','',t,flags=re.M)
+   baseline=m.configure(old,t,'./GFAS/file.nc',fallback='legacy_65_35_l15')
+   for factor in (0.8,1.0,1.2):
+    out=m.configure(old,t,'./GFAS/file.nc',fallback='legacy_65_35_l15',height_scale=factor)
+    self.assertEqual(out.count('--> FINNv25_GFAS_height_scale'),1)
+    self.assertIn(f'FINNv25_GFAS_height_scale : {factor}',out)
+    # Only the height option differs: all source rows/fallback/dates retained.
+    self.assertEqual(out.replace(f'height_scale : {factor}','height_scale : 1.0'),baseline)
+    again=m.configure(out,t,'./GFAS/file.nc',fallback='legacy_65_35_l15',height_scale=factor)
+    self.assertEqual(again.count('--> FINNv25_GFAS_height_scale'),1)
+ def test_invalid_height_scales(self):
+  t=(m.ROOT/'src/GEOS-Chem/run/GCClassic/HEMCO_Config.rc.templates/HEMCO_Config.rc.fullchem').read_text()
+  for factor in (0,-0.8,float('nan'),float('inf')):
+   with self.assertRaisesRegex(ValueError,'finite and positive'):
+    m.configure(t,t,'./GFAS/file.nc',height_scale=factor)
+  with self.assertRaisesRegex(ValueError,'prepared-profile'):
+   m.configure(t,t,'./GFAS/file.nc',legacy=True,height_scale=0.8)
  def test_explicit_timezone_hours_path(self):
   t=(m.ROOT/'src/GEOS-Chem/run/GCClassic/HEMCO_Config.rc.templates/HEMCO_Config.rc.fullchem').read_text()
   out=m.configure(t,t,'./GFAS/file.nc',timezone_hours='./TIMEZONES/hours.nc')

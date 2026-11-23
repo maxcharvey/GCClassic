@@ -14,11 +14,19 @@ concurrency:
 
 jobs:
   gnu:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runner }}
     strategy:
+      fail-fast: false
       matrix:
         build_type: [Debug]
         gcc-version: [10, 11, 12, 13, 14, 15, 16]
+        include:
+          # Use official packages on the release that provides each compiler.
+          - runner: ubuntu-24.04
+          - gcc-version: 15
+            runner: ubuntu-26.04
+          - gcc-version: 16
+            runner: ubuntu-26.04
     env:
       CXX: g++
       CC: gcc
@@ -34,9 +42,6 @@ jobs:
       - name: Install dependencies
         run: |
           sudo grep -rl 'packages.microsoft.com' /etc/apt/sources.list.d/ | xargs -r sudo rm -f
-          sudo apt update -y
-          sudo apt install -y software-properties-common
-          sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
           sudo apt update -y
           sudo apt install -y gcc-${{ matrix.gcc-version }} g++-${{ matrix.gcc-version }} gfortran-${{ matrix.gcc-version }}
           sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${{ matrix.gcc-version }} 100 \
@@ -60,6 +65,7 @@ jobs:
           bash test/implementation/run_brc_cloudj_map_test.sh
           bash test/implementation/run_brc_optics_math_test.sh
           bash test/implementation/run_brc_species_test.sh
+          bash test/implementation/run_brc_bleaching_test.sh
           python3 test/implementation/brc_wtc_split_test.py
           bash test/implementation/run_brc_wtc_split_test.sh
           bash test/implementation/run_brc_wtc_output_test.sh

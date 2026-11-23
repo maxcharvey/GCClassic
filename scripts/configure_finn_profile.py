@@ -5,6 +5,7 @@ Does not change dates, restarts, meteorology or chemistry. Writes a backup,
 refuses unknown layouts, and installs FINN source rows from this checkout.
 """
 import argparse
+import math
 from pathlib import Path
 import re
 
@@ -12,7 +13,40 @@ ROOT = Path(__file__).resolve().parents[1]
 METHOD = 'gfas_prepared'
 
 
-def configure(text, template, auxiliary, legacy=False, fallback='pbl', timezone_hours=None):
+def configure_height_scale(text, height_scale):
+    """Change only the height option in an already configured hybrid run."""
+    height_scale = float(height_scale)
+    if not math.isfinite(height_scale) or height_scale <= 0:
+        raise ValueError('GFAS height scale must be finite and positive')
+    for key, expected in (('FINNV25_GFAS_PROFILE', 'true'),
+                          ('FINNv25', 'true'), ('QFED2', 'false')):
+        values = re.findall(rf'^\s*-->\s*{re.escape(key)}\s*:\s*(\S+)', text, re.M)
+        if values != [expected]:
+            raise ValueError(f'Height-only configuration requires one {key}: {expected}')
+    for key, expected in (('FINNv25_Inject', 'on'), ('GFAS', 'off'), ('GFED', 'off')):
+        values = re.findall(rf'^\s*\d+\s+{re.escape(key)}\s*:\s*(\S+)', text, re.M)
+        if values != [expected]:
+            raise ValueError(f'Height-only configuration requires one {key}: {expected}')
+    key = 'FINNv25_GFAS_height_scale'
+    pattern = rf'^(\s*-->\s*{key}\s*:\s*)\S+'
+    new, count = re.subn(pattern, lambda m: m[1]+str(height_scale), text, flags=re.M)
+    if count > 1:
+        raise ValueError('Duplicate GFAS height-scale options')
+    if count == 0:
+        anchor = re.search(r'^.*-->\s*FINNv25_profile_fallback\s*:[^\n]*\n', text, re.M)
+        if not anchor or len(re.findall(r'-->\s*FINNv25_profile_fallback\s*:', text)) != 1:
+            raise ValueError('Expected one existing FINN profile fallback option')
+        new = text[:anchor.end()]+f'    --> {key} : {height_scale}\n'+text[anchor.end():]
+    return new
+
+
+def configure(text, template, auxiliary, legacy=False, fallback='pbl', timezone_hours=None,
+              height_scale=1.0):
+    height_scale = float(height_scale)
+    if not math.isfinite(height_scale) or height_scale <= 0:
+        raise ValueError('GFAS height scale must be finite and positive')
+    if legacy and height_scale != 1.0:
+        raise ValueError('GFAS height scaling requires the prepared-profile method')
     if fallback not in ('pbl', 'surface', 'error', 'legacy_65_35_l15'):
         raise ValueError('Unknown FINN profile fallback')
     def set_option(key, value, required=True):
@@ -50,7 +84,8 @@ def configure(text, template, auxiliary, legacy=False, fallback='pbl', timezone_
         if len(fields) == 12 and fields[0].isdigit() and '.nc' in fields[2]:
             if fields[5] != 'RF':
                 raise ValueError('Daily FINNv2.5 input must use RF time selection: '+fields[1])
-    for key in ('FINNV25_GFAS_PROFILE','FINNv25_profile_fallback','FINNv25_profile_datum'):
+    for key in ('FINNV25_GFAS_PROFILE','FINNv25_profile_fallback','FINNv25_profile_datum',
+                'FINNv25_GFAS_height_scale'):
         text = re.sub(rf'^\s*-->\s*{key}\s*:[^\n]*\n', '', text, flags=re.M)
     # Replace the one known auxiliary block from a fresh branch-generated run.
     aux_pattern = r'# Auxiliary shape only:[^\n]*\n\(\(\(FINNv25_Inject\n\(\(\(FINNV25_GFAS_PROFILE\n.*?\)\)\)FINNV25_GFAS_PROFILE\n\)\)\)FINNv25_Inject\n'
@@ -61,7 +96,8 @@ def configure(text, template, auxiliary, legacy=False, fallback='pbl', timezone_
     set_option('FINNv25_vertical_injection_levels', '0')
     anchor = re.search(r'^.*-->\s*FINNv25_vertical_injection_levels\s*:[^\n]*\n',text,re.M)
     options = ('    --> FINNV25_GFAS_PROFILE : '+('false' if legacy else 'true')+'\n'
-               '    --> FINNv25_profile_fallback : '+fallback+'\n')
+               '    --> FINNv25_profile_fallback : '+fallback+'\n'
+               '    --> FINNv25_GFAS_height_scale : '+str(height_scale)+'\n')
     text=text[:anchor.end()]+options+text[anchor.end():]
     marker='# Auxiliary shape only:'
     tail=template[template.index(marker):]
@@ -94,12 +130,27 @@ def main():
     ap.add_argument('--auxiliary',help='Auxiliary filename with optional HEMCO $YYYY/$MM/$DD tokens')
     ap.add_argument('--legacy',action='store_true',help='Same FINN inventory with legacy surface allocation')
     ap.add_argument('--fallback', choices=('pbl','surface','error','legacy_65_35_l15'), default='pbl')
+    ap.add_argument('--height-scale', type=float, default=1.0,
+                    help='Scale prepared profile heights above model surface; 0.8/1.0/1.2 sensitivities. '
+                         'FINN mass and zero-support fallback are unchanged.')
+    ap.add_argument('--height-scale-only', action='store_true',
+                    help='Only change the height option in an existing FINN/GFAS hybrid; '
+                         'preserve every inventory path, fallback and other setting.')
     ap.add_argument('--timezone-hours', help='Verified hour-valued TIMEZONES file; use a short run-local path')
     args=ap.parse_args()
     path=args.run_dir/'HEMCO_Config.rc'
-    backup=path.with_suffix('.rc.before_finn_profile')
+    backup=path.with_suffix('.rc.before_height_scale' if args.height_scale_only else '.rc.before_finn_profile')
     if backup.exists():
         raise SystemExit(f'Refusing to overwrite {backup}')
+    if args.height_scale_only:
+        if args.legacy or args.auxiliary or args.timezone_hours or args.fallback != 'pbl':
+            raise SystemExit('--height-scale-only cannot be combined with inventory/fallback options')
+        old=path.read_text()
+        new=configure_height_scale(old,args.height_scale)
+        backup.write_text(old)
+        path.write_text(new)
+        print(f'Configured height scale {args.height_scale}: {path}')
+        return
     template=(ROOT/f'src/GEOS-Chem/run/GCClassic/HEMCO_Config.rc.templates/HEMCO_Config.rc.{args.kind}').read_text()
     old=path.read_text()
     from prepare_finn_timezones import validate_timezone_file
@@ -108,7 +159,8 @@ def main():
         tz = re.search(r'^\*\s+TIMEZONES\s+(\S+)', old, re.M)[1]
         tz = tz.replace('$ROOT', re.search(r'^ROOT:\s+(\S+)', old, re.M)[1])
     validate_timezone_file(args.run_dir/tz)
-    new=configure(old,template,args.auxiliary,args.legacy,args.fallback,args.timezone_hours)
+    new=configure(old,template,args.auxiliary,args.legacy,args.fallback,args.timezone_hours,
+                  height_scale=args.height_scale)
     backup.write_text(old)
     path.write_text(new)
     print(f'Configured {METHOD if not args.legacy else "legacy_surface"}: {path}')
